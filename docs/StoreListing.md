@@ -1,6 +1,6 @@
 # 스토어 등록 정보
 
-App Store Connect · Google Play Console에 입력할 값. 가격은 한국 기준 ₩3,000(유료 앱, 인앱 결제 없음).
+App Store Connect · Google Play Console에 입력할 값. 가격은 한국 기준 ₩1,100(유료 앱, 인앱 결제 없음).
 
 ## 공통
 
@@ -10,7 +10,7 @@ App Store Connect · Google Play Console에 입력할 값. 가격은 한국 기�
 | SKU (App Store) | `bearbell-ios-001` |
 | 기본 언어 | 한국어 (추가: 영어, 일본어) |
 | 카테고리 | 건강 및 피트니스 (보조: 유틸리티) |
-| 가격 | ₩3,000 (다른 국가는 스토어 자동 환산) |
+| 가격 | ₩1,100 (다른 국가는 스토어 자동 환산) |
 | 개인정보처리방침 URL | https://doublejbs.github.io/bearbell/privacy/ |
 | 지원 URL | https://github.com/doublejbs/bearbell/issues |
 | 저작권 | 2026 Jinyong Suh |
