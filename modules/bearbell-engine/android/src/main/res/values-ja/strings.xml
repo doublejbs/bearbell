@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <string name="bearbell_channel_name">bearbell の状態</string>
+  <string name="bearbell_running_title">bearbell オン</string>
+  <string name="bearbell_running_text">振ると鈴が鳴ります</string>
+  <string name="bearbell_off_title">bearbell オフ</string>
+  <string name="bearbell_off_text">「オン」を押すと再び揺れを検知します</string>
+  <string name="bearbell_action_turn_off">オフ</string>
+  <string name="bearbell_action_turn_on">オン</string>
+</resources>

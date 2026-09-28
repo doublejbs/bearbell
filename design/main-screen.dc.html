@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>bearbell 메인</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@700&amp;family=IBM+Plex+Sans+KR:wght@400;500;600&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;font-family:'IBM Plex Sans KR',system-ui,sans-serif;background:#F2EDE1;color:#1B2620}
+a{color:#8A6A22}a:hover{color:#6B5119}
+@keyframes bb-swing{0%{transform:rotate(0)}15%{transform:rotate(-8deg)}35%{transform:rotate(7deg)}55%{transform:rotate(-4deg)}75%{transform:rotate(2deg)}100%{transform:rotate(0)}}
+@keyframes bb-wave{0%{opacity:0;transform:scale(.9)}35%{opacity:.85}100%{opacity:0;transform:scale(1.18)}}
+.bb-bell{transform-box:fill-box;transform-origin:50% 50%}
+.bb-waves{opacity:0;transform-origin:50% 50%}
+.bb-armed .bb-waves{animation:bb-wave 2.4s ease-out infinite}
+.bb-armed.bb-ring .bb-waves{animation:bb-wave .9s ease-out}
+.bb-seg:focus-visible,.bb-main:focus-visible,.bb-bellbtn:focus-visible{outline:2px solid #8A6A22;outline-offset:3px}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; box-sizing: border-box; padding: 64px 24px 40px; display: flex; flex-direction: column; gap: 28px; background: #F2EDE1; overflow: hidden">
+
+<div style="display: flex; justify-content: center; align-items: baseline">
+<div style="font-family: 'Gowun Batang', Georgia, serif; font-size: 30px; font-weight: 700; letter-spacing: -0.5px; color: #1B2620">bearbell</div>
+</div>
+
+<div style="flex-grow: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 28px">
+<button class="bb-bellbtn {{armedClass}} {{ringClass}}" onClick="{{ring}}" aria-label="방울 울리기" style="width: 280px; height: 300px; padding: 0; border: none; background: transparent; cursor: pointer; border-radius: 24px; position: relative">
+<svg viewBox="0 0 280 300" width="280" height="300" aria-hidden="true">
+<g class="bb-waves" fill="none" stroke="#B8862B" stroke-width="3" stroke-linecap="round">
+<path d="M34 130 Q16 170 34 210"></path>
+<path d="M14 118 Q-8 170 14 222"></path>
+<path d="M246 130 Q264 170 246 210"></path>
+<path d="M266 118 Q288 170 266 222"></path>
+</g>
+<g class="bb-bell">
+<circle cx="82" cy="98" r="28" fill="{{bearColor}}"></circle>
+<circle cx="198" cy="98" r="28" fill="{{bearColor}}"></circle>
+<path d="M140 68 C 86 68 54 106 54 156 C 54 210 90 248 140 250 C 190 248 226 210 226 156 C 226 106 194 68 140 68 Z" fill="{{bearColor}}"></path>
+<circle cx="112" cy="144" r="8" fill="#050505"></circle>
+<circle cx="168" cy="144" r="8" fill="#050505"></circle>
+<circle cx="114.5" cy="141.5" r="2.4" fill="#E9DFC8"></circle>
+<circle cx="170.5" cy="141.5" r="2.4" fill="#E9DFC8"></circle>
+<ellipse cx="140" cy="190" rx="32" ry="26" fill="{{muzzle}}"></ellipse>
+<path d="M127 180 C 127 172 153 172 153 180 C 153 188 146 193 140 194 C 134 193 127 188 127 180 Z" fill="#0A0A0A"></path>
+<path d="M140 194 L140 206" stroke="#0A0A0A" stroke-width="3.5" stroke-linecap="round"></path>
+</g>
+</svg>
+</button>
+
+<div style="display: flex; flex-direction: column; align-items: center; gap: 6px">
+<div style="font-size: 22px; font-weight: 600; color: #1B2620">{{statusTitle}}</div>
+<div style="font-size: 15px; color: #6B7369">{{statusSub}}</div>
+</div>
+</div>
+
+<div style="display: flex; flex-direction: column; gap: 10px">
+<div style="font-size: 13px; font-weight: 500; color: #6B7369; letter-spacing: 0.5px">흔들림 감도</div>
+<div role="radiogroup" aria-label="흔들림 감도" style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px; padding: 5px; background: #E3DBC9; border-radius: 16px">
+<sc-for list="{{levels}}" as="lv" hint-placeholder-count="3">
+<button class="bb-seg" role="radio" aria-checked="{{lv.checked}}" onClick="{{lv.pick}}" style="{{lv.style}}">{{lv.label}}</button>
+</sc-for>
+</div>
+</div>
+
+<button class="bb-main" onClick="{{toggle}}" aria-pressed="{{armedStr}}" style="{{mainStyle}}">{{mainLabel}}</button>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;accent&quot;:{&quot;editor&quot;:&quot;color&quot;,&quot;default&quot;:&quot;#D9B45A&quot;,&quot;options&quot;:[&quot;#D9B45A&quot;,&quot;#C8793F&quot;,&quot;#B9C4B8&quot;]},&quot;$preview&quot;:{&quot;width&quot;:390,&quot;height&quot;:844}}">
+class Component extends DCLogic {
+constructor(props) {
+super(props);
+this.state = { armed: true, level: 'mid', ringing: false };
+}
+componentWillUnmount() { clearTimeout(this.t); }
+renderVals() {
+const accent = this.props.accent ?? '#D9B45A';
+const armed = this.state.armed;
+const segBase = 'height: 44px; border: none; border-radius: 12px; font-family: inherit; font-size: 15px; cursor: pointer; ';
+const levels = [
+{ id: 'high', label: '예민' },
+{ id: 'mid', label: '보통' },
+{ id: 'low', label: '둔감' }
+].map((l) => {
+const on = l.id === this.state.level;
+return {
+label: l.label,
+checked: on ? 'true' : 'false',
+style: segBase + (on ? 'background: #1B2620; color: #F2EDE1; font-weight: 600' : 'background: transparent; color: #4F5851; font-weight: 500'),
+pick: () => this.setState({ level: l.id })
+};
+});
+const mainBase = 'height: 60px; border-radius: 30px; font-family: inherit; font-size: 17px; font-weight: 600; cursor: pointer; ';
+return {
+levels,
+ringClass: this.state.ringing ? 'bb-ring' : '',
+armedClass: armed ? 'bb-armed' : '',
+bearColor: '#3A352F',
+muzzle: '#8C7458',
+statusTitle: armed ? '흔들면 울려요' : '잠시 꺼둠',
+statusSub: armed ? '걸을 때 주머니나 가방에 넣어두세요' : '조용히 해야 할 땐 꺼두세요',
+armedStr: armed ? 'true' : 'false',
+mainLabel: armed ? '끄기' : '켜기',
+mainStyle: mainBase + (armed ? 'background: transparent; color: #1B2620; border: 1.5px solid #9AA39B' : 'background: #1B2620; color: #F2EDE1; border: none'),
+toggle: () => this.setState({ armed: !armed }),
+ring: () => {
+clearTimeout(this.t);
+this.setState({ ringing: false }, () => {
+requestAnimationFrame(() => this.setState({ ringing: true }));
+this.t = setTimeout(() => this.setState({ ringing: false }), 950);
+});
+}
+};
+}
+}
+</script>
+</body>
+</html>
