@@ -288,3 +288,14 @@ scripts/BellSynth.ts, scripts/GenerateBellSounds.mjs
 - 마지막 감도를 기기에 저장한다 — iOS `UserDefaults`(키 `bearbell.sensitivity`), Android `SharedPreferences`(파일 `bearbell_engine`, 키 `sensitivity`)
 - `start`/`setSensitivity`로 바뀔 때마다 저장하고, 엔진 초기화 시 불러온다(없거나 알 수 없는 값이면 보통)
 - 그래서 프로세스가 죽은 뒤 알림·Live Activity로 켜도 마지막 감도로 동작하고, 앱을 열면 복원 이벤트(§2.0)로 화면에도 그 감도가 표시된다
+
+## 13. 출시 빌드
+
+- 버전: `version` 1.0.0, iOS `buildNumber` "1", Android `versionCode` 1 (`app.json`)
+- iOS 수출 규정: 표준 암호화만 사용 → `ITSAppUsesNonExemptEncryption: false` (업로드마다 수출 규정 질문을 건너뜀)
+- Android 릴리스 서명: 로컬 config plugin `plugins/WithReleaseSigning.js`
+  - Gradle 속성 `BEARBELL_UPLOAD_STORE_FILE`, `BEARBELL_UPLOAD_STORE_PASSWORD`, `BEARBELL_UPLOAD_KEY_ALIAS`, `BEARBELL_UPLOAD_KEY_PASSWORD`가 **모두 있으면** `signingConfigs.release`를 만들고 `buildTypes.release`가 그것을 쓰게 한다. 하나라도 없으면 템플릿 그대로(디버그 키) 둔다 — 키가 없는 머신에서도 빌드는 된다
+  - 값은 레포 밖 `~/.gradle/gradle.properties`에 둔다(키스토어 파일은 `~/.android-keystores/`). 레포에는 비밀 값이 들어가지 않는다
+  - Play 앱 서명(Play App Signing)을 쓰므로 이 키는 업로드 키다
+  - 변환은 순수 함수 `transformAppBuildGradle(contents)`로 export하고, 여러 번 적용해도 같은 결과(멱등), 템플릿 구조가 다르면 명확한 에러
+- 스토어 자산: iOS 6.9" 스크린샷, Android 휴대전화 스크린샷(가로:세로 ≤ 1:2), Play 그래픽 이미지 1024×500 — 한·영·일

@@ -10,17 +10,20 @@
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.jinyongsuh.bearbell",
+      "buildNumber": "1",
       "infoPlist": {
         "UIBackgroundModes": [
           "audio"
         ],
         "NSMotionUsageDescription": "bearbell uses motion sensors to ring the bell when it detects shaking in your pocket.",
-        "CFBundleAllowMixedLocalizations": true
+        "CFBundleAllowMixedLocalizations": true,
+        "ITSAppUsesNonExemptEncryption": false
       },
       "appleTeamId": "NFV6WC2X83"
     },
     "android": {
       "package": "com.jinyongsuh.bearbell",
+      "versionCode": 1,
       "adaptiveIcon": {
         "backgroundColor": "#F2EDE1",
         "foregroundImage": "./assets/android-icon-foreground.png",
@@ -67,7 +70,8 @@
           "imageWidth": 200,
           "resizeMode": "contain"
         }
-      ]
+      ],
+      "./plugins/WithReleaseSigning"
     ],
     "locales": {
       "ko": "./languages/ko.json",
