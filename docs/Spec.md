@@ -291,7 +291,8 @@ scripts/BellSynth.ts, scripts/GenerateBellSounds.mjs
 
 ## 13. 출시 빌드
 
-- 버전: `version` 1.0.0, iOS `buildNumber` "1", Android `versionCode` 1 (`app.json`)
+- 버전: `version` 1.0.0, iOS `buildNumber` "2", Android `versionCode` 1 (`app.json`)
+- iOS는 **iPhone 전용**(`supportsTablet: false`) — 주머니에 넣고 걷는 앱이라 iPad 지원 실익이 없고, iPad 스크린샷 요구를 피한다
 - iOS 수출 규정: 표준 암호화만 사용 → `ITSAppUsesNonExemptEncryption: false` (업로드마다 수출 규정 질문을 건너뜀)
 - Android 릴리스 서명: 로컬 config plugin `plugins/WithReleaseSigning.js`
   - Gradle 속성 `BEARBELL_UPLOAD_STORE_FILE`, `BEARBELL_UPLOAD_STORE_PASSWORD`, `BEARBELL_UPLOAD_KEY_ALIAS`, `BEARBELL_UPLOAD_KEY_PASSWORD`가 **모두 있으면** `signingConfigs.release`를 만들고 `buildTypes.release`가 그것을 쓰게 한다. 하나라도 없으면 템플릿 그대로(디버그 키) 둔다 — 키가 없는 머신에서도 빌드는 된다

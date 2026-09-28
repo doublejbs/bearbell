@@ -8,9 +8,9 @@
     "userInterfaceStyle": "light",
     "backgroundColor": "#F2EDE1",
     "ios": {
-      "supportsTablet": true,
+      "supportsTablet": false,
       "bundleIdentifier": "com.jinyongsuh.bearbell",
-      "buildNumber": "1",
+      "buildNumber": "2",
       "infoPlist": {
         "UIBackgroundModes": [
           "audio"
