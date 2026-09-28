@@ -55,7 +55,7 @@ iPhone은 잠금화면·다이나믹 아일랜드, Android는 알림에서 바�
 ## English
 
 - **App name**: `bearbell - Bear Bell`
-- **Subtitle**: `Bear bell that rings as you hike`
+- **Subtitle**: `A bear bell for every step`
 - **Short description** (Play): `A bear bell that rings with every step, even in your pocket with the screen off.`
 - **Promotional text**: `Let wildlife know you're coming. bearbell rings with every step on the trail, and you can turn it on or off right from the Lock Screen.`
 - **Keywords**: `bear bell,hiking,trail,bell,bear,wildlife,trekking,camping,safety,outdoor,walking,forest`
