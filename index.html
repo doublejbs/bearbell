@@ -1,3 +1,599 @@
 <!doctype html>
-<html lang="en"><head><meta charset="utf-8"><meta http-equiv="refresh" content="0; url=./privacy/"><title>bearbell</title></head>
-<body><a href="./privacy/">bearbell Privacy Policy</a></body></html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>bearbell</title>
+<meta name="description" content="bearbell turns your phone into a bear bell. Keep it in your pocket and it rings with every step, even with the screen off.">
+<meta name="theme-color" content="#F2EDE1">
+<meta name="color-scheme" content="light">
+<link rel="canonical" href="https://doublejbs.github.io/bearbell/">
+<link rel="icon" type="image/png" sizes="48x48" href="favicon.png">
+<link rel="icon" type="image/png" sizes="192x192" href="assets/icon-192.png">
+<link rel="apple-touch-icon" href="assets/icon-192.png">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="bearbell">
+<meta property="og:url" content="https://doublejbs.github.io/bearbell/">
+<meta property="og:title" content="bearbell">
+<meta property="og:description" content="A bear bell that rings as you walk. Keep your phone in your pocket and it rings with every step, even with the screen off.">
+<meta property="og:image" content="https://doublejbs.github.io/bearbell/assets/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="The bearbell bear face with sound waves, next to the words bearbell, a bear bell that rings as you walk">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@700&amp;family=IBM+Plex+Sans+KR:wght@400;500;600&amp;family=Shippori+Mincho+B1:wght@700&amp;family=Zen+Kaku+Gothic+New:wght@400;500&amp;display=swap">
+<style>
+:root{
+  --ivory:#F2EDE1;--ink:#1B2620;--muted:#6B7369;--track:#E3DBC9;
+  --bear:#3A352F;--muzzle:#8C7458;--gold:#B8862B;
+  --display:"Gowun Batang",Georgia,"Apple SD Gothic Neo",serif;
+  --body:"IBM Plex Sans KR",-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo",system-ui,sans-serif;
+  color-scheme:light;
+}
+html[lang=ja]{
+  --display:"Shippori Mincho B1","Hiragino Mincho ProN",Georgia,serif;
+  --body:"Zen Kaku Gothic New","Hiragino Sans",-apple-system,system-ui,sans-serif;
+}
+*,*::before,*::after{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--ivory);color:var(--ink);font:400 17px/1.7 var(--body);-webkit-font-smoothing:antialiased}
+html[lang=ja] body{line-height:1.8}
+html[lang=ko] body{word-break:keep-all;overflow-wrap:break-word}
+img,svg{display:block;max-width:100%}
+a{color:inherit}
+:focus-visible{outline:2px solid var(--ink);outline-offset:3px;border-radius:4px}
+h1,h2,h3{margin:0;font-weight:700}
+h2{font-family:var(--display);font-size:clamp(26px,4vw,32px);line-height:1.3;letter-spacing:-.01em}
+h3{font-size:17px;font-weight:600;line-height:1.45}
+html[lang=ja] h3{font-weight:500}
+p{margin:0}
+.wrap{max-width:960px;margin:0 auto;padding:0 max(16px,env(safe-area-inset-left)) 0 max(16px,env(safe-area-inset-right))}
+@media (min-width:600px){.wrap{padding-left:32px;padding-right:32px}}
+
+/* top bar */
+.top{display:flex;justify-content:flex-end;padding-top:16px}
+.langs{display:flex;gap:2px;margin:0;padding:0;list-style:none;font-size:14px}
+.langs a{display:block;padding:6px 10px;border-radius:999px;color:var(--muted);text-decoration:none}
+.langs a:hover{color:var(--ink)}
+.langs a[aria-current=true]{background:var(--track);color:var(--ink);font-weight:500}
+
+/* hero */
+.hero{text-align:center;padding-top:16px;padding-bottom:72px}
+.wordmark{font-family:"Gowun Batang",Georgia,serif;font-size:clamp(34px,6vw,44px);letter-spacing:-.02em;line-height:1.2}
+.bell{display:block;margin:28px auto 0;padding:0;border:0;background:none;cursor:pointer;border-radius:32px;width:min(84vw,420px);-webkit-tap-highlight-color:transparent;touch-action:manipulation}
+.bell svg{width:100%;height:auto;overflow:visible}
+.bell .face{transition:transform .12s ease-out;transform-origin:50% 55%;transform-box:fill-box}
+.bell:active .face{transform:scale(.97)}
+.waves{opacity:0;transform-origin:50% 50%}
+.bell.ring .waves{animation:wave .9s ease-out}
+@keyframes wave{0%{opacity:0;transform:scale(.9)}35%{opacity:.85}100%{opacity:0;transform:scale(1.18)}}
+.hint{margin-top:20px;color:var(--muted);font-size:15px;display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:8px 12px}
+.shake{font:500 14px/1 var(--body);color:var(--ink);background:transparent;border:1.5px solid var(--muted);border-radius:999px;padding:9px 14px;cursor:pointer}
+.shake[aria-pressed=true]{background:var(--track);border-color:var(--track)}
+.status{min-height:1.5em;margin-top:6px;color:var(--muted);font-size:14px}
+.tagline{margin-top:20px;font-family:var(--display);font-size:clamp(26px,5.2vw,40px);line-height:1.3;letter-spacing:-.01em;text-wrap:balance}
+.lede{max-width:34em;margin:14px auto 0;color:var(--muted);font-size:clamp(16px,2.2vw,18px);text-wrap:pretty}
+.stores{display:flex;flex-wrap:wrap;justify-content:center;gap:12px;margin-top:32px}
+.store{display:inline-flex;flex-direction:column;align-items:center;justify-content:center;min-width:164px;min-height:56px;padding:8px 22px;border-radius:999px;border:1.5px solid var(--ink);background:var(--ink);color:var(--ivory);text-decoration:none;line-height:1.25}
+.store b{font-size:16px;font-weight:600}
+.store small{font-size:12.5px}
+.store[aria-disabled=true]{background:transparent;color:var(--ink);border-color:#9AA39B;cursor:default}
+.store[aria-disabled=true] small{color:var(--muted)}
+
+/* sections */
+section.band{border-top:1px solid var(--track);padding:64px 0}
+.band h2{margin-bottom:32px}
+.how{display:grid;gap:48px}
+@media (min-width:800px){.how{grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:center;gap:56px}}
+
+.trail{list-style:none;margin:0;padding:0;counter-reset:step;max-width:70ch}
+.trail li{position:relative;padding:0 0 36px 60px;counter-increment:step}
+.trail li:last-child{padding-bottom:0}
+.trail li::before{content:counter(step);position:absolute;left:0;top:-2px;width:36px;height:36px;border-radius:50%;border:1.5px solid var(--ink);background:var(--ivory);display:grid;place-items:center;font:600 16px/1 var(--body);z-index:1}
+.trail li:not(:last-child)::after{content:"";position:absolute;left:17px;top:38px;bottom:2px;border-left:2px dotted var(--muted)}
+.trail p{color:var(--muted);margin-top:4px}
+
+.shots{display:grid;grid-template-columns:1fr 1fr;gap:16px;max-width:440px;margin:0 auto;width:100%}
+.shots img{width:100%;height:auto;border-radius:clamp(20px,6vw,36px);background:var(--track);box-shadow:0 0 0 1px var(--track)}
+
+.features{list-style:none;margin:0;padding:0;display:grid;gap:36px}
+@media (min-width:720px){.features{grid-template-columns:1fr 1fr;gap:40px 56px}}
+.features li{display:grid;align-content:start;grid-template-columns:28px minmax(0,1fr);gap:4px 16px;max-width:70ch}
+.features svg{grid-row:span 2;width:28px;height:28px;margin-top:1px;fill:none;stroke:var(--ink);stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+.features p{color:var(--muted)}
+
+.note{padding:0 0 48px;color:var(--muted);font-size:15px}
+.note p{max-width:70ch}
+
+footer{border-top:1px solid var(--track);padding:24px 0 40px;font-size:14px;color:var(--muted)}
+footer .wrap{display:flex;flex-wrap:wrap;gap:8px 24px;align-items:center}
+footer a{color:var(--ink);text-underline-offset:3px}
+footer .copy{margin-left:auto}
+@media (max-width:480px){footer .copy{margin-left:0;width:100%}}
+
+@media (prefers-reduced-motion:reduce){
+  .bell.ring .waves{animation:none}
+  .bell .face{transition:none}
+}
+</style>
+</head>
+<body>
+<header class="wrap top">
+  <nav aria-label="Language" data-i18n-aria="langLabel">
+    <ul class="langs">
+      <li><a href="?lang=ko" hreflang="ko" lang="ko" data-lang="ko">한국어</a></li>
+      <li><a href="?lang=en" hreflang="en" lang="en" data-lang="en" aria-current="true">English</a></li>
+      <li><a href="?lang=ja" hreflang="ja" lang="ja" data-lang="ja">日本語</a></li>
+    </ul>
+  </nav>
+</header>
+
+<main>
+  <section class="wrap hero" aria-labelledby="title">
+    <h1 id="title" class="wordmark">bearbell</h1>
+
+    <button class="bell" id="bell" type="button" aria-label="Ring the bell" data-i18n-aria="bellLabel">
+      <svg viewBox="-10 60 300 200" width="300" height="200" aria-hidden="true" focusable="false">
+        <g class="waves" fill="none" stroke="#B8862B" stroke-width="3" stroke-linecap="round">
+          <path d="M34 130 Q16 170 34 210"/>
+          <path d="M14 118 Q-8 170 14 222"/>
+          <path d="M246 130 Q264 170 246 210"/>
+          <path d="M266 118 Q288 170 266 222"/>
+        </g>
+        <g class="face">
+          <circle cx="82" cy="98" r="28" fill="#3A352F"/>
+          <circle cx="198" cy="98" r="28" fill="#3A352F"/>
+          <path d="M140 68 C 86 68 54 106 54 156 C 54 210 90 248 140 250 C 190 248 226 210 226 156 C 226 106 194 68 140 68 Z" fill="#3A352F"/>
+          <circle cx="112" cy="144" r="8" fill="#050505"/>
+          <circle cx="168" cy="144" r="8" fill="#050505"/>
+          <circle cx="114.5" cy="141.5" r="2.4" fill="#E9DFC8"/>
+          <circle cx="170.5" cy="141.5" r="2.4" fill="#E9DFC8"/>
+          <ellipse cx="140" cy="190" rx="32" ry="26" fill="#8C7458"/>
+          <path d="M127 180 C 127 172 153 172 153 180 C 153 188 146 193 140 194 C 134 193 127 188 127 180 Z" fill="#0A0A0A"/>
+          <path d="M140 194 L140 206" stroke="#0A0A0A" stroke-width="3.5" stroke-linecap="round"/>
+        </g>
+      </svg>
+    </button>
+    <audio id="sound" preload="auto">
+      <source src="assets/bell.m4a" type="audio/mp4">
+      <source src="assets/bell.wav" type="audio/wav">
+    </audio>
+
+    <div class="hint">
+      <span data-i18n="hint">Tap the bear to hear it</span>
+      <button class="shake" id="shake" type="button" aria-pressed="false" hidden data-i18n="shake">Try shaking</button>
+    </div>
+    <p class="status" id="status" role="status" aria-live="polite"></p>
+
+    <p class="tagline" data-i18n="tagline">A bear bell that rings as you walk</p>
+    <p class="lede" data-i18n="lede">Keep your phone in your pocket or bag and it rings with every step, letting wildlife know a person is nearby.</p>
+
+    <div class="stores">
+      <a class="store" data-store="ios" data-href="" aria-disabled="true">
+        <b>App Store</b><small data-i18n="soon">Coming soon</small>
+      </a>
+      <a class="store" data-store="android" data-href="" aria-disabled="true">
+        <b>Google Play</b><small data-i18n="soon">Coming soon</small>
+      </a>
+    </div>
+  </section>
+
+  <section class="band" aria-labelledby="how-title">
+    <div class="wrap how">
+      <div>
+        <h2 id="how-title" data-i18n="howTitle">How it works</h2>
+        <ol class="trail">
+          <li><h3 data-i18n="s1t">Turn it on</h3><p data-i18n="s1d">Open bearbell and tap Turn on. Pick the sensitivity that suits your stride.</p></li>
+          <li><h3 data-i18n="s2t">Put it in your pocket</h3><p data-i18n="s2d">A bag works too. The screen can stay off.</p></li>
+          <li><h3 data-i18n="s3t">Walk</h3><p data-i18n="s3d">The bell rings with every step, so wildlife knows you’re coming.</p></li>
+        </ol>
+      </div>
+      <div class="shots">
+        <img data-shot="off" src="assets/shots/en-off.jpg" width="660" height="1434" loading="lazy" decoding="async" alt="bearbell turned off, with the Turn on button and the sensitivity setting" data-i18n-alt="altOff">
+        <img data-shot="on" src="assets/shots/en-on.jpg" width="660" height="1434" loading="lazy" decoding="async" alt="bearbell turned on, showing Shake to ring with sound waves around the bear" data-i18n-alt="altOn">
+      </div>
+    </div>
+  </section>
+
+  <section class="band" aria-labelledby="feat-title">
+    <div class="wrap">
+      <h2 id="feat-title" data-i18n="featTitle">What it does</h2>
+      <ul class="features">
+        <li>
+          <svg viewBox="0 0 28 28" aria-hidden="true"><rect x="7" y="2.5" width="14" height="23" rx="3"/><path d="M12 5.5h4"/><path d="M16.5 12.2a3.6 3.6 0 1 1-4.3 4.3 3 3 0 0 0 4.3-4.3z"/></svg>
+          <h3 data-i18n="f1t">Rings with the screen off</h3>
+          <p data-i18n="f1d">It senses motion and rings even when your phone is locked in your pocket.</p>
+        </li>
+        <li>
+          <svg viewBox="0 0 28 28" aria-hidden="true"><path d="M4 8h20M4 14h20M4 20h20"/><circle cx="9" cy="8" r="2.4" fill="#F2EDE1"/><circle cx="17" cy="14" r="2.4" fill="#F2EDE1"/><circle cx="12" cy="20" r="2.4" fill="#F2EDE1"/></svg>
+          <h3 data-i18n="f2t">Three sensitivity levels</h3>
+          <p data-i18n="f2d">Choose High, Medium or Low to match your stride and where you carry your phone.</p>
+        </li>
+        <li>
+          <svg viewBox="0 0 28 28" aria-hidden="true"><rect x="5.5" y="12" width="17" height="13" rx="2.5"/><path d="M9.5 12V8.5a4.5 4.5 0 0 1 9 0V12"/><path d="M14 17.2v3"/></svg>
+          <h3 data-i18n="f3t">Turn it on or off from the Lock Screen</h3>
+          <p data-i18n="f3d">On iPhone, use the Lock Screen or Dynamic Island. On Android, use the notification. No need to open the app when you need quiet.</p>
+        </li>
+        <li>
+          <svg viewBox="0 0 28 28" aria-hidden="true"><path d="M14 3.5v2"/><path d="M8 19.5V13a6 6 0 0 1 12 0v6.5l2 2.5H6z"/><path d="M11.5 22a2.5 2.5 0 0 0 5 0"/></svg>
+          <h3 data-i18n="f4t">An original bell sound</h3>
+          <p data-i18n="f4d">A clear, brass-like tone synthesized just for bearbell.</p>
+        </li>
+        <li>
+          <svg viewBox="0 0 28 28" aria-hidden="true"><path d="M14 3 5 6.5v6.8c0 5.4 3.8 9.6 9 11.7 5.2-2.1 9-6.3 9-11.7V6.5z"/><path d="m10 14 3 3 5.5-5.5"/></svg>
+          <h3 data-i18n="f5t">Collects no data</h3>
+          <p data-i18n="f5d">No accounts, ads or analytics. Nothing is sent anywhere.</p>
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <aside class="note">
+    <div class="wrap"><p data-i18n="note">bearbell is an aid that may help reduce wildlife encounters. It does not guarantee your safety. Always follow local guidance and safety rules on the trail.</p></div>
+  </aside>
+</main>
+
+<footer>
+  <div class="wrap">
+    <a href="./privacy/" id="privacy" data-i18n="privacy">Privacy policy</a>
+    <a href="https://github.com/doublejbs/bearbell/issues" data-i18n="support">Support</a>
+    <span class="copy">© 2026 Jinyong Suh</span>
+  </div>
+</footer>
+
+<script>
+(() => {
+  const DICT = {
+    en: {
+      title: 'bearbell – A bear bell that rings as you walk',
+      desc: 'bearbell turns your phone into a bear bell. Keep it in your pocket and it rings with every step, even with the screen off.',
+      langLabel: 'Language',
+      bellLabel: 'Ring the bell',
+      hint: 'Tap the bear to hear it',
+      shake: 'Try shaking',
+      shakeOn: 'Shaking is on',
+      shakeReady: 'Shake your phone to ring the bell.',
+      shakeDenied: 'Motion access wasn’t allowed, but you can still tap the bear.',
+      tagline: 'A bear bell that rings as you walk',
+      lede: 'Keep your phone in your pocket or bag and it rings with every step, letting wildlife know a person is nearby.',
+      soon: 'Coming soon',
+      howTitle: 'How it works',
+      s1t: 'Turn it on',
+      s1d: 'Open bearbell and tap Turn on. Pick the sensitivity that suits your stride.',
+      s2t: 'Put it in your pocket',
+      s2d: 'A bag works too. The screen can stay off.',
+      s3t: 'Walk',
+      s3d: 'The bell rings with every step, so wildlife knows you’re coming.',
+      altOff: 'bearbell turned off, with the Turn on button and the sensitivity setting',
+      altOn: 'bearbell turned on, showing Shake to ring with sound waves around the bear',
+      featTitle: 'What it does',
+      f1t: 'Rings with the screen off',
+      f1d: 'It senses motion and rings even when your phone is locked in your pocket.',
+      f2t: 'Three sensitivity levels',
+      f2d: 'Choose High, Medium or Low to match your stride and where you carry your phone.',
+      f3t: 'Turn it on or off from the Lock Screen',
+      f3d: 'On iPhone, use the Lock Screen or Dynamic Island. On Android, use the notification. No need to open the app when you need quiet.',
+      f4t: 'An original bell sound',
+      f4d: 'A clear, brass-like tone synthesized just for bearbell.',
+      f5t: 'Collects no data',
+      f5d: 'No accounts, ads or analytics. Nothing is sent anywhere.',
+      note: 'bearbell is an aid that may help reduce wildlife encounters. It does not guarantee your safety. Always follow local guidance and safety rules on the trail.',
+      privacy: 'Privacy policy',
+      support: 'Support'
+    },
+    ko: {
+      title: 'bearbell – 걸을 때마다 울리는 곰방울',
+      desc: 'bearbell은 폰을 곰방울로 바꿔 줘요. 주머니에 넣고 걸으면 화면이 꺼져 있어도 걸음마다 방울이 울려요.',
+      langLabel: '언어',
+      bellLabel: '방울 울리기',
+      hint: '곰을 눌러 소리를 들어보세요',
+      shake: '흔들어 보기',
+      shakeOn: '흔들기 켜짐',
+      shakeReady: '폰을 흔들면 방울이 울려요.',
+      shakeDenied: '동작 접근이 허용되지 않았어요. 곰을 눌러서도 들을 수 있어요.',
+      tagline: '걸을 때마다 울리는 곰방울',
+      lede: '주머니나 가방에 넣고 걸으면 걸음마다 방울이 울려, 산속 야생동물에게 사람이 있다는 걸 알려요.',
+      soon: '곧 출시',
+      howTitle: '사용 방법',
+      s1t: '켜기',
+      s1d: '앱을 열고 켜기를 누르세요. 걸음걸이에 맞는 감도를 고를 수 있어요.',
+      s2t: '주머니에 넣기',
+      s2d: '가방에 넣어도 괜찮아요. 화면은 꺼 두세요.',
+      s3t: '걷기',
+      s3d: '걸음마다 방울이 울려 야생동물에게 사람이 다가가고 있음을 알려요.',
+      altOff: '꺼져 있는 bearbell 화면. 켜기 버튼과 흔들림 감도 설정이 보여요',
+      altOn: '켜져 있는 bearbell 화면. 곰 주위로 소리 물결이 퍼지고 흔들면 울려요라고 표시돼요',
+      featTitle: '기능',
+      f1t: '화면을 꺼도 울려요',
+      f1d: '잠금 상태로 주머니 속에 있어도 흔들림을 감지해 방울을 울려요.',
+      f2t: '세 단계 감도',
+      f2d: '예민, 보통, 둔감 중에서 걸음걸이와 넣어 두는 위치에 맞게 고르세요.',
+      f3t: '잠금화면에서 바로 끄고 켜기',
+      f3d: 'iPhone은 잠금화면과 다이나믹 아일랜드, Android는 알림에서 바로 끄고 켤 수 있어요. 대피소처럼 조용해야 할 곳에서도 앱을 열 필요가 없어요.',
+      f4t: '직접 만든 방울 소리',
+      f4d: '놋쇠 방울처럼 맑게 울리는 소리를 직접 합성했어요.',
+      f5t: '개인정보를 수집하지 않아요',
+      f5d: '계정, 광고, 분석 기능이 없고 어떤 데이터도 보내지 않아요.',
+      note: 'bearbell은 야생동물과의 마주침을 줄이는 데 도움을 주는 보조 도구이며 안전을 보장하지 않아요. 산행할 때는 현지 안내와 안전 수칙을 따라 주세요.',
+      privacy: '개인정보처리방침',
+      support: '문의'
+    },
+    ja: {
+      title: 'bearbell – 歩くたびに鳴る熊鈴',
+      desc: 'bearbell はスマホを熊鈴に変えるアプリです。ポケットに入れて歩けば、画面を消していても一歩ごとに鈴が鳴ります。',
+      langLabel: '言語',
+      bellLabel: '鈴を鳴らす',
+      hint: 'クマをタップして音を聞いてみて',
+      shake: '振ってみる',
+      shakeOn: '振ると鳴ります',
+      shakeReady: 'スマホを振ると鈴が鳴ります。',
+      shakeDenied: 'モーションへのアクセスが許可されませんでした。クマをタップしても音を聞けます。',
+      tagline: '歩くたびに鳴る熊鈴',
+      lede: 'ポケットやバッグに入れて歩くと一歩ごとに鈴が鳴り、山の野生動物に人の存在を知らせます。',
+      soon: '近日公開',
+      howTitle: '使い方',
+      s1t: 'オンにする',
+      s1d: 'アプリを開いて「オンにする」をタップ。歩き方に合わせて感度を選べます。',
+      s2t: 'ポケットに入れる',
+      s2d: 'バッグの中でも大丈夫。画面は消したままで構いません。',
+      s3t: '歩く',
+      s3d: '一歩ごとに鈴が鳴り、野生動物に人が近づいていることを知らせます。',
+      altOff: 'オフの状態の bearbell 画面。「オンにする」ボタンと揺れの感度の設定',
+      altOn: 'オンの状態の bearbell 画面。クマのまわりに音の波が広がり「振ると鳴ります」と表示',
+      featTitle: '特長',
+      f1t: '画面を消しても鳴ります',
+      f1d: 'ロック中やポケットの中でも揺れを検知して鈴を鳴らします。',
+      f2t: '3段階の感度',
+      f2d: '高、中、低の3段階から、歩き方や持ち方に合わせて選べます。',
+      f3t: 'ロック画面からすぐにオン・オフ',
+      f3d: 'iPhone はロック画面とダイナミックアイランド、Android は通知から操作できます。山小屋など静かにしたい場所でも、アプリを開く必要はありません。',
+      f4t: 'オリジナルの鈴の音',
+      f4d: '真鍮の鈴のように澄んで響く音を、独自に合成しました。',
+      f5t: 'データを収集しません',
+      f5d: 'アカウント、広告、分析機能はなく、データを送信しません。',
+      note: 'bearbell は野生動物との遭遇を減らすための補助ツールであり、安全を保証するものではありません。登山の際は現地の案内と安全ルールに従ってください。',
+      privacy: 'プライバシーポリシー',
+      support: 'サポート'
+    }
+  };
+  const LANGS = Object.keys(DICT);
+  const STORAGE_KEY = 'bearbell.lang';
+
+  const readStored = () => {
+    try {
+      return localStorage.getItem(STORAGE_KEY);
+    } catch (e) {
+      return null;
+    }
+  };
+
+  const writeStored = (lang) => {
+    try {
+      localStorage.setItem(STORAGE_KEY, lang);
+    } catch (e) {
+      // storage may be unavailable (private mode); the choice simply isn't remembered
+    }
+  };
+
+  const detectLang = () => {
+    const param = new URLSearchParams(location.search).get('lang');
+
+    if (param && LANGS.includes(param)) {
+      return param;
+    }
+
+    const stored = readStored();
+
+    if (stored && LANGS.includes(stored)) {
+      return stored;
+    }
+
+    const preferred = navigator.languages && navigator.languages.length ? navigator.languages : [navigator.language || 'en'];
+
+    for (const tag of preferred) {
+      const prefix = String(tag).toLowerCase().slice(0, 2);
+
+      if (prefix === 'ko' || prefix === 'ja') {
+        return prefix;
+      }
+
+      if (prefix === 'en') {
+        return 'en';
+      }
+    }
+
+    return 'en';
+  };
+
+  let current = 'en';
+
+  const applyLang = (lang) => {
+    const t = DICT[lang];
+    current = lang;
+    document.documentElement.lang = lang;
+    document.title = t.title;
+    document.querySelector('meta[name="description"]').setAttribute('content', t.desc);
+
+    document.querySelectorAll('[data-i18n]').forEach((el) => {
+      el.textContent = t[el.dataset.i18n];
+    });
+
+    document.querySelectorAll('[data-i18n-aria]').forEach((el) => {
+      el.setAttribute('aria-label', t[el.dataset.i18nAria]);
+    });
+
+    document.querySelectorAll('[data-i18n-alt]').forEach((el) => {
+      el.alt = t[el.dataset.i18nAlt];
+    });
+
+    document.querySelectorAll('img[data-shot]').forEach((img) => {
+      img.src = `assets/shots/${lang}-${img.dataset.shot}.jpg`;
+    });
+
+    document.querySelectorAll('[data-lang]').forEach((a) => {
+      a.setAttribute('aria-current', a.dataset.lang === lang ? 'true' : 'false');
+    });
+
+    document.getElementById('privacy').href = `./privacy/#${lang}`;
+    syncShakeLabel();
+  };
+
+  // store buttons become real links once their data-href is filled in
+  document.querySelectorAll('.store').forEach((el) => {
+    const href = el.dataset.href;
+
+    if (href) {
+      el.href = href;
+      el.removeAttribute('aria-disabled');
+      el.querySelector('small').remove();
+    }
+  });
+
+  document.querySelectorAll('[data-lang]').forEach((a) => {
+    a.addEventListener('click', (event) => {
+      event.preventDefault();
+      const lang = a.dataset.lang;
+      writeStored(lang);
+      const url = new URL(location.href);
+      url.searchParams.set('lang', lang);
+      history.replaceState(null, '', url);
+      applyLang(lang);
+    });
+  });
+
+  // bell: sound + one wave burst
+  const bell = document.getElementById('bell');
+  const sound = document.getElementById('sound');
+
+  const ring = () => {
+    try {
+      sound.currentTime = 0;
+    } catch (e) {
+      // not seekable yet; play from wherever it is
+    }
+
+    const played = sound.play();
+
+    if (played && played.catch) {
+      played.catch(() => {});
+    }
+
+    bell.classList.remove('ring');
+    bell.getBoundingClientRect();
+    bell.classList.add('ring');
+  };
+
+  bell.addEventListener('click', ring);
+  bell.addEventListener('animationend', () => bell.classList.remove('ring'));
+
+  // shake to ring (touch devices with a motion sensor)
+  const shakeBtn = document.getElementById('shake');
+  const status = document.getElementById('status');
+  const GRAVITY = 9.81;
+  const THRESHOLD = 6;
+  const COOLDOWN_MS = 300;
+  let shaking = false;
+  let lastRing = 0;
+
+  function syncShakeLabel() {
+    const t = DICT[current];
+    shakeBtn.textContent = shaking ? t.shakeOn : t.shake;
+
+    if (status.dataset.key) {
+      status.textContent = t[status.dataset.key];
+    }
+  }
+
+  const setStatus = (key) => {
+    status.dataset.key = key;
+    status.textContent = DICT[current][key];
+  };
+
+  const handleMotion = (event) => {
+    const a = event.accelerationIncludingGravity;
+
+    if (!a || a.x === null) {
+      return;
+    }
+
+    const magnitude = Math.sqrt(a.x * a.x + a.y * a.y + a.z * a.z);
+    const now = performance.now();
+
+    if (Math.abs(magnitude - GRAVITY) >= THRESHOLD && now - lastRing >= COOLDOWN_MS) {
+      lastRing = now;
+      ring();
+    }
+  };
+
+  const startShaking = () => {
+    shaking = true;
+    window.addEventListener('devicemotion', handleMotion);
+    shakeBtn.setAttribute('aria-pressed', 'true');
+    setStatus('shakeReady');
+    syncShakeLabel();
+  };
+
+  const stopShaking = () => {
+    shaking = false;
+    window.removeEventListener('devicemotion', handleMotion);
+    shakeBtn.setAttribute('aria-pressed', 'false');
+    delete status.dataset.key;
+    status.textContent = '';
+    syncShakeLabel();
+  };
+
+  const handleShakeClick = async () => {
+    if (shaking) {
+      stopShaking();
+
+      return;
+    }
+
+    // unlock audio inside the user gesture so later shake-triggered rings can play
+    sound.muted = true;
+    const unlocked = sound.play();
+
+    if (unlocked && unlocked.then) {
+      unlocked.then(() => {
+        sound.pause();
+        sound.muted = false;
+      }).catch(() => {
+        sound.muted = false;
+      });
+    } else {
+      sound.muted = false;
+    }
+
+    if (typeof DeviceMotionEvent.requestPermission === 'function') {
+      try {
+        const result = await DeviceMotionEvent.requestPermission();
+
+        if (result !== 'granted') {
+          setStatus('shakeDenied');
+
+          return;
+        }
+      } catch (e) {
+        setStatus('shakeDenied');
+
+        return;
+      }
+    }
+
+    startShaking();
+  };
+
+  const canShake = 'DeviceMotionEvent' in window && window.matchMedia('(pointer: coarse)').matches;
+
+  if (canShake) {
+    shakeBtn.hidden = false;
+    shakeBtn.addEventListener('click', handleShakeClick);
+  }
+
+  applyLang(detectLang());
+})();
+</script>
+</body>
+</html>
