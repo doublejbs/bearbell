@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <string name="bearbell_channel_name">bearbell status</string>
+  <string name="bearbell_running_title">bearbell on</string>
+  <string name="bearbell_running_text">Shake to ring the bell</string>
+  <string name="bearbell_off_title">bearbell off</string>
+  <string name="bearbell_off_text">Tap Turn on to detect shaking again</string>
+  <string name="bearbell_action_turn_off">Turn off</string>
+  <string name="bearbell_action_turn_on">Turn on</string>
+</resources>

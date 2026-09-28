@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <string name="bearbell_channel_name">bearbell 상태</string>
+  <string name="bearbell_running_title">bearbell 켜짐</string>
+  <string name="bearbell_running_text">흔들면 방울이 울려요</string>
+  <string name="bearbell_off_title">bearbell 꺼짐</string>
+  <string name="bearbell_off_text">켜기를 누르면 다시 흔들림을 감지해요</string>
+  <string name="bearbell_action_turn_off">끄기</string>
+  <string name="bearbell_action_turn_on">켜기</string>
+</resources>

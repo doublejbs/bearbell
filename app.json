@@ -1,0 +1,77 @@
+{
+  "expo": {
+    "name": "bearbell",
+    "slug": "bearbell",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "light",
+    "backgroundColor": "#F2EDE1",
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.jinyongsuh.bearbell",
+      "infoPlist": {
+        "UIBackgroundModes": [
+          "audio"
+        ],
+        "NSMotionUsageDescription": "bearbell uses motion sensors to ring the bell when it detects shaking in your pocket.",
+        "CFBundleAllowMixedLocalizations": true
+      },
+      "appleTeamId": "NFV6WC2X83"
+    },
+    "android": {
+      "package": "com.jinyongsuh.bearbell",
+      "adaptiveIcon": {
+        "backgroundColor": "#F2EDE1",
+        "foregroundImage": "./assets/android-icon-foreground.png",
+        "backgroundImage": "./assets/android-icon-background.png",
+        "monochromeImage": "./assets/android-icon-monochrome.png"
+      },
+      "predictiveBackGestureEnabled": false
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
+    },
+    "plugins": [
+      "expo-font",
+      "./plugins/WithSceneLifecycle",
+      [
+        "expo-widgets",
+        {
+          "bundleIdentifier": "com.jinyongsuh.bearbell.widgets",
+          "widgets": []
+        }
+      ],
+      [
+        "expo-localization",
+        {
+          "supportedLocales": {
+            "ios": [
+              "en",
+              "ko",
+              "ja"
+            ],
+            "android": [
+              "en",
+              "ko",
+              "ja"
+            ]
+          }
+        }
+      ],
+      [
+        "expo-splash-screen",
+        {
+          "backgroundColor": "#F2EDE1",
+          "image": "./assets/splash-icon.png",
+          "imageWidth": 200,
+          "resizeMode": "contain"
+        }
+      ]
+    ],
+    "locales": {
+      "ko": "./languages/ko.json",
+      "ja": "./languages/ja.json"
+    }
+  }
+}
