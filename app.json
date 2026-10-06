@@ -16,7 +16,12 @@
         ],
         "NSMotionUsageDescription": "bearbell uses motion sensors to ring the bell when it detects shaking in your pocket.",
         "CFBundleAllowMixedLocalizations": true,
-        "ITSAppUsesNonExemptEncryption": false
+        "ITSAppUsesNonExemptEncryption": false,
+        "CFBundleLocalizations": [
+          "en",
+          "ko",
+          "ja"
+        ]
       },
       "appleTeamId": "SUZ336H4W3"
     },
@@ -75,6 +80,29 @@
     "locales": {
       "ko": "./languages/ko.json",
       "ja": "./languages/ja.json"
-    }
+    },
+    "extra": {
+      "eas": {
+        "build": {
+          "experimental": {
+            "ios": {
+              "appExtensions": [
+                {
+                  "targetName": "ExpoWidgetsTarget",
+                  "bundleIdentifier": "com.doublejbs.bearbell.widgets",
+                  "entitlements": {
+                    "com.apple.security.application-groups": [
+                      "group.com.doublejbs.bearbell"
+                    ]
+                  }
+                }
+              ]
+            }
+          }
+        },
+        "projectId": "076dd537-1406-4645-925f-075e9d27c9c4"
+      }
+    },
+    "owner": "doublejbs"
   }
 }
