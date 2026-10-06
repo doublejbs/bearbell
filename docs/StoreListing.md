@@ -6,14 +6,16 @@ App Store Connect · Google Play Console에 입력할 값. 가격은 한국 기�
 
 | 항목 | 값 |
 |---|---|
-| 번들 ID / 패키지 | `com.jinyongsuh.bearbell` |
+| 판매자 | 마그마 (Apple Developer 팀 `SUZ336H4W3`) |
+| 번들 ID / 패키지 | `com.doublejbs.bearbell` (위젯 확장 `com.doublejbs.bearbell.widgets`) |
+| App Store Connect Apple ID | `6819491691` |
 | SKU (App Store) | `bearbell-ios-001` |
 | 기본 언어 | 한국어 (추가: 영어, 일본어) |
 | 카테고리 | 건강 및 피트니스 (보조: 유틸리티) |
 | 가격 | ₩1,100 (다른 국가는 스토어 자동 환산) |
 | 개인정보처리방침 URL | https://doublejbs.github.io/bearbell/privacy/ |
 | 지원 URL | https://github.com/doublejbs/bearbell/issues |
-| 저작권 | 2026 Jinyong Suh |
+| 저작권 | 2026 마그마 |
 | 연령 등급 | 4+ / 전체이용가 (폭력·성인·도박·사용자 생성 콘텐츠 없음) |
 | 데이터 수집 | 수집하지 않음 (App Store "데이터를 수집하지 않음", Play 데이터 보안 "수집·공유 없음") |
 | 광고 | 없음 |

@@ -291,7 +291,10 @@ scripts/BellSynth.ts, scripts/GenerateBellSounds.mjs
 
 ## 13. 출시 빌드
 
-- 버전: `version` 1.0.0, iOS `buildNumber` "2", Android `versionCode` 1 (`app.json`)
+- 판매자: **마그마** — Apple Developer 팀 `SUZ336H4W3`, Google Play도 같은 판매자 계정
+- 식별자: iOS 번들 ID / Android 패키지 `com.doublejbs.bearbell`, 위젯 확장 `com.doublejbs.bearbell.widgets`, App Group `group.com.doublejbs.bearbell` (`app.json`)
+- 버전: `version` 1.0.0 (`app.json`). 빌드 번호(iOS `buildNumber` / Android `versionCode`)는 `eas.json`의 `cli.appVersionSource: "remote"`로 EAS가 원격 관리하고 `production` 프로필의 `autoIncrement`로 올린다 — `app.json`에 두지 않는다(원격 모드에서는 무시됨)
+- App Store Connect 앱 Apple ID `6819491691` → `eas.json` `submit.production.ios.ascAppId`
 - iOS는 **iPhone 전용**(`supportsTablet: false`) — 주머니에 넣고 걷는 앱이라 iPad 지원 실익이 없고, iPad 스크린샷 요구를 피한다
 - iOS 수출 규정: 표준 암호화만 사용 → `ITSAppUsesNonExemptEncryption: false` (업로드마다 수출 규정 질문을 건너뜀)
 - Android 릴리스 서명: 로컬 config plugin `plugins/WithReleaseSigning.js`

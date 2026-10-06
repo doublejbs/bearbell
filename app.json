@@ -9,8 +9,7 @@
     "backgroundColor": "#F2EDE1",
     "ios": {
       "supportsTablet": false,
-      "bundleIdentifier": "com.jinyongsuh.bearbell",
-      "buildNumber": "2",
+      "bundleIdentifier": "com.doublejbs.bearbell",
       "infoPlist": {
         "UIBackgroundModes": [
           "audio"
@@ -19,11 +18,10 @@
         "CFBundleAllowMixedLocalizations": true,
         "ITSAppUsesNonExemptEncryption": false
       },
-      "appleTeamId": "NFV6WC2X83"
+      "appleTeamId": "SUZ336H4W3"
     },
     "android": {
-      "package": "com.jinyongsuh.bearbell",
-      "versionCode": 1,
+      "package": "com.doublejbs.bearbell",
       "adaptiveIcon": {
         "backgroundColor": "#F2EDE1",
         "foregroundImage": "./assets/android-icon-foreground.png",
@@ -41,7 +39,8 @@
       [
         "expo-widgets",
         {
-          "bundleIdentifier": "com.jinyongsuh.bearbell.widgets",
+          "bundleIdentifier": "com.doublejbs.bearbell.widgets",
+          "groupIdentifier": "group.com.doublejbs.bearbell",
           "widgets": []
         }
       ],
