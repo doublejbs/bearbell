@@ -4,8 +4,6 @@ import {
   buttonStyle,
   font,
   foregroundStyle,
-  frame,
-  monospacedDigit,
   padding,
   tint,
 } from '@expo/ui/swift-ui/modifiers';
@@ -47,17 +45,15 @@ const BearbellActivity = (props: BearbellLiveActivityProps, environment: LiveAct
   const buttonTarget = isArmed ? 'bearbell-stop' : 'bearbell-start';
   // 갱신이 끊겨 stale 이 되면 켜짐을 단정하지 않고 확인을 안내한다 — 꺼짐은 앱이 죽어도 사실이므로 켜짐에만 적용 (docs/Spec.md §2.1)
   const isStale = isArmed && environment.isStale;
-  const isTimerVisible = isArmed && !isStale;
-  const waveColor = isTimerVisible ? accentColor : mutedColor;
+  const waveColor = isStale || !isArmed ? mutedColor : accentColor;
   const armedTitleText = isStale ? copy.staleTitle : copy.armedTitle;
   const armedDetailText = isStale ? copy.staleDetail : copy.armedDetail;
   const titleText = isArmed ? armedTitleText : copy.offTitle;
   const detailText = isArmed ? armedDetailText : copy.offDetail;
-  // 타이머가 없을 때(stale 켜짐 또는 꺼짐)의 compactTrailing 문구
-  const trailingText = isArmed ? copy.compactStale : copy.compactOff;
+  const armedTrailingText = isStale ? copy.compactStale : props.sensitivityLabel;
+  const trailingText = isArmed ? armedTrailingText : copy.compactOff;
   const buttonLabel = isArmed ? copy.stopLabel : copy.startLabel;
   const buttonTint = isArmed ? mutedColor : accentColor;
-  const startedAt = new Date(props.startedAtMs);
 
   return {
     banner: (
@@ -73,18 +69,6 @@ const BearbellActivity = (props: BearbellLiveActivityProps, environment: LiveAct
           <Text modifiers={[font({ size: 14 }), foregroundStyle(ivoryColor)]}>{detailText}</Text>
         </VStack>
         <Spacer />
-        {isTimerVisible ? (
-          <Text
-            date={startedAt}
-            dateStyle="timer"
-            modifiers={[
-              font({ weight: 'medium', size: 15 }),
-              monospacedDigit(),
-              foregroundStyle(waveColor),
-              frame({ maxWidth: 72, alignment: 'trailing' }),
-            ]}
-          />
-        ) : null}
         <Button
           target={buttonTarget}
           label={buttonLabel}
@@ -93,19 +77,7 @@ const BearbellActivity = (props: BearbellLiveActivityProps, environment: LiveAct
       </HStack>
     ),
     compactLeading: <Image systemName="pawprint.fill" color={waveColor} />,
-    compactTrailing: isTimerVisible ? (
-      <Text
-        date={startedAt}
-        dateStyle="timer"
-        modifiers={[
-          monospacedDigit(),
-          foregroundStyle(waveColor),
-          frame({ maxWidth: 48, alignment: 'trailing' }),
-        ]}
-      />
-    ) : (
-      <Text modifiers={[foregroundStyle(waveColor)]}>{trailingText}</Text>
-    ),
+    compactTrailing: <Text modifiers={[foregroundStyle(waveColor)]}>{trailingText}</Text>,
     minimal: <Image systemName="pawprint.fill" color={waveColor} />,
     expandedLeading: (
       <Image

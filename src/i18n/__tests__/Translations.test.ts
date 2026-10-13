@@ -56,8 +56,6 @@ describe('TRANSLATIONS', () => {
     expect(ko.status.armedTitle).toBe('흔들면 울려요');
     expect(ko.status.pausedTitle).toBe('잠시 꺼둠');
     expect(ko.power.turnOn).toBe('켜기');
-    expect(ko.sensitivity.labels[Sensitivity.High]).toBe('예민');
-    expect(ko.liveActivity.armedDetail('보통')).toBe('감도 보통 · 흔들면 울려요');
   });
 
   it('영어·일본어 대표 문구가 스펙과 같다', () => {
@@ -65,10 +63,56 @@ describe('TRANSLATIONS', () => {
     const ja = TRANSLATIONS[AppLanguage.Ja];
 
     expect(en.status.armedTitle).toBe('Shake to ring');
-    expect(en.sensitivity.labels[Sensitivity.Mid]).toBe('Medium');
-    expect(en.liveActivity.armedDetail('Medium')).toBe('Medium sensitivity · Shake to ring');
     expect(ja.status.armedTitle).toBe('振ると鳴ります');
-    expect(ja.sensitivity.labels[Sensitivity.Low]).toBe('低');
-    expect(ja.liveActivity.armedDetail('中')).toBe('感度 中 · 振ると鳴ります');
+  });
+
+  // 표시 이름만 '방울 소리'로 바꾸고 내부 값(high/mid/low)은 그대로 둔다 (docs/Spec.md §1.4, §10)
+  describe('방울 소리 문구', () => {
+    const BELL_SOUND_COPY = {
+      [AppLanguage.Ko]: {
+        title: '방울 소리',
+        labels: {
+          [Sensitivity.High]: '짤랑짤랑',
+          [Sensitivity.Mid]: '딸랑',
+          [Sensitivity.Low]: '조용히',
+        },
+        armedDetail: '딸랑 · 흔들면 울려요',
+      },
+      [AppLanguage.En]: {
+        title: 'Bell sound',
+        labels: {
+          [Sensitivity.High]: 'Jingle',
+          [Sensitivity.Mid]: 'Ding',
+          [Sensitivity.Low]: 'Quiet',
+        },
+        armedDetail: 'Ding · Shake to ring',
+      },
+      [AppLanguage.Ja]: {
+        title: '鈴の音',
+        labels: {
+          [Sensitivity.High]: 'チリンチリン',
+          [Sensitivity.Mid]: 'チリン',
+          [Sensitivity.Low]: '静か',
+        },
+        armedDetail: 'チリン · 振ると鳴ります',
+      },
+    };
+
+    it.each(Object.values(AppLanguage))('%s 섹션 제목과 세 라벨이 스펙과 같다', (language) => {
+      const translation = TRANSLATIONS[language];
+      const expected = BELL_SOUND_COPY[language];
+
+      expect(translation.sensitivity.title).toBe(expected.title);
+      expect(translation.sensitivity.labels).toEqual(expected.labels);
+    });
+
+    it.each(Object.values(AppLanguage))('%s Live Activity 켜짐 본문은 라벨 · 안내 문구다', (language) => {
+      const translation = TRANSLATIONS[language];
+      const expected = BELL_SOUND_COPY[language];
+
+      expect(translation.liveActivity.armedDetail(expected.labels[Sensitivity.Mid])).toBe(
+        expected.armedDetail,
+      );
+    });
   });
 });

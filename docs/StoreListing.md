@@ -2,6 +2,8 @@
 
 App Store Connect · Google Play Console에 입력할 값. 가격은 한국 기준 ₩1,100(유료 앱, 인앱 결제 없음).
 
+> **플랫폼 언급 금지** — App Store 메타데이터(설명·부제·프로모션 텍스트·키워드)에 Android 등 타 플랫폼을 언급하면 App Review 가이드라인 2.3.10(Accurate Metadata)으로 반려된다(2026-10-08, 1.0.0 (3) 심사에서 실제 반려). 설명은 두 스토어에 같은 문안을 쓰므로 iPhone/Android 같은 플랫폼 이름 없이 작성한다.
+
 ## 공통
 
 | 항목 | 값 |
@@ -37,12 +39,12 @@ bearbell은 폰을 흔들면 곰방울 소리가 나는 앱이에요.
 ■ 화면을 꺼도 울려요
 잠금 상태, 주머니 속에서도 흔들림을 감지해 방울을 울립니다.
 
-■ 감도 조절
-예민 · 보통 · 둔감 세 단계로, 걸음걸이와 넣어 두는 위치에 맞게 고를 수 있어요.
+■ 방울 소리 고르기
+짤랑짤랑 · 딸랑 · 조용히 세 가지로, 걸음과 넣어 두는 위치에 맞게 울리는 정도를 고를 수 있어요.
 
 ■ 잠금화면에서 바로 끄고 켜기
-iPhone은 잠금화면·다이나믹 아일랜드, Android는 알림에서 바로 끄고 켤 수 있어요.
-대피소나 조용히 해야 할 곳에서 앱을 열 필요가 없어요.
+앱을 열지 않아도 잠금화면에서 바로 끄고 켤 수 있어요.
+대피소나 조용히 해야 할 곳에서 폰을 꺼내 잠금만 풀면 돼요.
 
 ■ 직접 만든 방울 소리
 실제 놋쇠 방울처럼 맑게 울리는 소리를 직접 합성했어요.
@@ -70,11 +72,11 @@ Keep it in your pocket or bag and it rings with every step, letting wildlife kno
 - Works with the screen off
 It detects shaking and rings even when your phone is locked and in your pocket.
 
-- Adjustable sensitivity
-Choose High, Medium or Low to match your stride and where you carry your phone.
+- Choose your bell sound
+Pick Jingle, Ding or Quiet to set how readily the bell rings for your stride and where you carry your phone.
 
 - Turn it on or off from the Lock Screen
-On iPhone, use the Lock Screen or Dynamic Island. On Android, use the notification. No need to open the app when you need quiet.
+Stop or start the bell right from the Lock Screen. No need to open the app when you need quiet.
 
 - An original bell sound
 A clear, brass-like bell tone synthesized just for bearbell.
@@ -102,11 +104,11 @@ bearbell は、スマホを振ると熊鈴の音が鳴るアプリです。
 ■ 画面を消しても鳴ります
 ロック中やポケットの中でも揺れを検知して鈴を鳴らします。
 
-■ 感度を調整
-高・中・低の3段階から、歩き方や持ち方に合わせて選べます。
+■ 鈴の音を選べる
+「チリンチリン」「チリン」「静か」の3種類から、歩き方や持ち方に合わせて鈴の鳴りやすさを選べます。
 
 ■ ロック画面からすぐにオン・オフ
-iPhone はロック画面・ダイナミックアイランド、Android は通知から操作できます。
+アプリを開かなくても、ロック画面からすぐに鈴を止めたり鳴らしたりできます。
 山小屋など静かにしたい場所でも、アプリを開く必要はありません。
 
 ■ オリジナルの鈴の音
@@ -127,7 +129,29 @@ iPhone はロック画面・ダイナミックアイランド、Android は通�
 bearbell is a bear bell for hikers. Its core feature is ringing a bell sound in the background while the phone is locked in a pocket, triggered by walking motion (accelerometer).
 To do this, while the user has turned bearbell on, the app keeps an audio session active (UIBackgroundModes: audio) and plays the bell sound whenever shaking is detected. When the user turns it off, the audio session is released and the app no longer runs in the background.
 How to test: tap "Turn on", lock the phone, and shake it — the bell rings. The Live Activity on the Lock Screen can turn it off and on.
+The app bundle includes a WidgetKit extension (com.doublejbs.bearbell.widgets). It exists only to render the Live Activity (Lock Screen banner and Dynamic Island). The app does not offer any Home Screen or Lock Screen widgets, so nothing appears in the widget gallery — this is expected.
 No account is required. No data is collected.
+```
+
+**App Store — 2.1 Information Needed 답변 (2026-10-08 심사, "위젯 확장을 추가할 수 없었다" 질의)**
+
+위젯 확장(`com.doublejbs.bearbell.widgets`)은 `expo-widgets` 플러그인이 Live Activity를 표시하기 위해 항상 생성하는 타깃이며, `app.json`의 `widgets: []`이므로 홈 화면·잠금화면 위젯은 하나도 정의되어 있지 않다. 위젯 갤러리에 아무것도 나오지 않는 것이 정상 동작이다. App Store Connect 심사 메시지에 아래를 그대로 답변한다.
+
+```
+Thank you for the review.
+
+No — bearbell does not offer any Home Screen or Lock Screen widgets, so there is nothing to add from the widget gallery. This is expected behavior, not a bug.
+
+The app bundle does contain a WidgetKit extension (com.doublejbs.bearbell.widgets), but it exists solely to render the app's Live Activity. Live Activities are implemented with ActivityKit and must be hosted in a WidgetKit extension; that is the only reason the extension is present. It declares no WidgetKit widget configurations.
+
+What the extension actually provides:
+- When the user turns bearbell on, a Live Activity appears on the Lock Screen (and in the Dynamic Island on supported iPhones) showing that the bell is active, the selected sensitivity, and an elapsed-time counter.
+- The Live Activity has a button to turn the bell off, and once off, a button to turn it back on, so the user does not need to unlock the phone and open the app.
+- When the user turns the bell off from the Live Activity, it switches to an "off" state with a button to turn it back on. Turning it off inside the app ends the Live Activity, and it is also dismissed when the app is quit.
+
+How to see it: open bearbell, tap "Turn on", then lock the device. The Live Activity is shown on the Lock Screen, and its button is interactive on iOS 17 and later. We verified this on an iPhone 15 Pro. The app is distributed as iPhone-only (supportsTablet is off), so on iPad it runs in iPhone compatibility mode.
+
+We have also revised the App Store description to remove the Android references noted under Guideline 2.3.10.
 ```
 
 **Google Play — 포그라운드 서비스 신고 (mediaPlayback)**

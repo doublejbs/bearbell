@@ -52,10 +52,10 @@ describe('MainScreen', () => {
     expect(screen.getByText('bearbell')).toBeOnTheScreen();
     expect(screen.getByText('잠시 꺼둠')).toBeOnTheScreen();
     expect(screen.getByText('조용히 해야 할 땐 꺼두세요')).toBeOnTheScreen();
-    expect(screen.getByText('흔들림 감도')).toBeOnTheScreen();
+    expect(screen.getByText('방울 소리')).toBeOnTheScreen();
     expect(screen.getAllByRole('radio')).toHaveLength(3);
-    expect(screen.getByRole('radio', { name: '보통' })).toBeChecked();
-    expect(screen.getByRole('radio', { name: '예민' })).not.toBeChecked();
+    expect(screen.getByRole('radio', { name: '딸랑' })).toBeChecked();
+    expect(screen.getByRole('radio', { name: '짤랑짤랑' })).not.toBeChecked();
     expect(screen.getByRole('button', { name: '켜기' })).toBeOnTheScreen();
   });
 
@@ -75,10 +75,10 @@ describe('MainScreen', () => {
     const user = userEvent.setup();
     await renderScreen();
 
-    await user.press(screen.getByRole('radio', { name: '둔감' }));
+    await user.press(screen.getByRole('radio', { name: '조용히' }));
 
-    expect(screen.getByRole('radio', { name: '둔감' })).toBeChecked();
-    expect(screen.getByRole('radio', { name: '보통' })).not.toBeChecked();
+    expect(screen.getByRole('radio', { name: '조용히' })).toBeChecked();
+    expect(screen.getByRole('radio', { name: '딸랑' })).not.toBeChecked();
     expect(mockedEngine.setEngineSensitivity).toHaveBeenCalledWith('low');
   });
 
@@ -97,8 +97,8 @@ describe('MainScreen', () => {
 
     expect(screen.getByText('bearbell')).toBeOnTheScreen();
     expect(screen.getByText('Paused')).toBeOnTheScreen();
-    expect(screen.getByText('Shake sensitivity')).toBeOnTheScreen();
-    expect(screen.getByRole('radio', { name: 'Medium' })).toBeChecked();
+    expect(screen.getByText('Bell sound')).toBeOnTheScreen();
+    expect(screen.getByRole('radio', { name: 'Ding' })).toBeChecked();
     expect(screen.getByRole('button', { name: 'Turn on' })).toBeOnTheScreen();
     expect(screen.getByRole('button', { name: 'Ring the bell' })).toBeOnTheScreen();
   });
@@ -108,7 +108,8 @@ describe('MainScreen', () => {
     await renderScreen();
 
     expect(screen.getByText('一時停止中')).toBeOnTheScreen();
-    expect(screen.getByRole('radio', { name: '中' })).toBeChecked();
+    expect(screen.getByText('鈴の音')).toBeOnTheScreen();
+    expect(screen.getByRole('radio', { name: 'チリン' })).toBeChecked();
     expect(screen.getByRole('button', { name: 'オンにする' })).toBeOnTheScreen();
   });
 });

@@ -6,6 +6,7 @@ import os
 
 enum BellEngineError: Error {
   case audioSessionActivationFailed(Error)
+  case audioOutputStartFailed(Error)
 }
 
 /// Who caused a running-state transition. Raw values match the JS `RunningChangeSource` enum.
@@ -34,43 +35,27 @@ private let expoWidgetsUserInteractionNotification = Notification.Name("onExpoWi
 private let liveActivityStopTarget = "bearbell-stop"
 private let liveActivityStartTarget = "bearbell-start"
 
-/// Forwards `AVAudioPlayerDelegate` finish callbacks as a Sendable closure.
-/// `AVAudioPlayer.delegate` is weak, so the owner must keep this object alive.
-/// The protocol is main-actor isolated (which would make this class main-actor bound);
-/// init and callbacks are nonisolated and only forward to `onFinish`, which hops to main.
-private final class BellPlayerDelegate: NSObject, AVAudioPlayerDelegate, Sendable {
-  private let onFinish: @Sendable () -> Void
-
-  nonisolated init(onFinish: @escaping @Sendable () -> Void) {
-    self.onFinish = onFinish
-  }
-
-  nonisolated func audioPlayerDidFinishPlaying(_ player: AVAudioPlayer, successfully flag: Bool) {
-    onFinish()
-  }
-
-  nonisolated func audioPlayerDecodeErrorDidOccur(_ player: AVAudioPlayer, error: Error?) {
-    onFinish()
-  }
-}
-
-/// Shake detection + bell playback + background keep-alive.
+/// Clapper physics + real-time bell synthesis + background keep-alive (docs/Spec.md §3, §4.1, §5).
 ///
 /// Threading: every public method and all engine state are confined to the main thread.
-/// The only exception is `detector`, which is owned by `motionQueue` (a serial queue);
-/// sensitivity changes are forwarded to it as operations, and rings hop back to main.
+/// The exception is the motionQueue-owned state (`clapper` and its flags; `motionQueue` is serial):
+/// sensitivity changes are forwarded to it as operations, and strikes go straight from motionQueue
+/// to `output.strike` (thread-safe). The audio render thread only renders the synth.
 /// The running-change handler is guarded by `handlerLock` so modules can (un)register from any thread;
 /// it is always invoked on main.
 // Thread confinement above is enforced manually, hence @unchecked Sendable.
 final class BellEngine: @unchecked Sendable {
   static let shared = BellEngine()
 
-  private static let bellPoolSize = 4
-  private static let accelerometerInterval: TimeInterval = 1.0 / 50.0
-  private static let assetsBundleName = "BearbellEngineAssets"
-  private static let bellResourceName = "bell"
-  private static let silenceResourceName = "silence"
-  private static let wavExtension = "wav"
+  private static let accelerometerInterval: TimeInterval = 1.0 / 100.0
+  private static let preferredIOBufferDuration: TimeInterval = 0.01
+  private static let ringOnceLoudness = 0.9
+  private static let ringOnceBrightness = 0.85
+  /// Output stays up this long after the synth falls silent while the engine is off.
+  private static let idleShutdownDelay: TimeInterval = 0.5
+  private static let idleCheckInterval: TimeInterval = 0.1
+  /// Minimum gap between recoveries requested by dropped strikes.
+  private static let recoveryRequestInterval: TimeInterval = 1
   private static let liveActivityStopBackgroundTaskName = "bearbell.liveActivityStop"
   private static let liveActivityStopBackgroundTaskDuration: TimeInterval = 5
   private static let sensitivityDefaultsKey = "bearbell.sensitivity"
@@ -78,6 +63,7 @@ final class BellEngine: @unchecked Sendable {
 
   private let logger = Logger(subsystem: "bearbell", category: "BellEngine")
   private let motionManager = CMMotionManager()
+  private let output = BellSynthOutput()
   private let motionQueue: OperationQueue = {
     let queue = OperationQueue()
     queue.name = "bearbell.motion"
@@ -91,22 +77,22 @@ final class BellEngine: @unchecked Sendable {
   private var isRunning = false
   private var isSessionActive = false
   private var sensitivity: ShakeSensitivity = .mid
-  private var bellPlayers: [AVAudioPlayer] = []
-  private var nextBellIndex = 0
-  private var silencePlayer: AVAudioPlayer?
+  private var idleShutdownTimer: DispatchSourceTimer?
+  private var silentSinceUptime: TimeInterval?
   private var liveActivityStopBackgroundTask: UIBackgroundTaskIdentifier = .invalid
   /// Native Live Activity heartbeat, only while JS is not alive (see handleLiveActivityTarget).
   private var nativeHeartbeatTimer: DispatchSourceTimer?
   /// Tail of the serialized native Live Activity updates, so they apply in the order they were made.
   private var liveActivityUpdateTask: Task<Void, Never>?
-  private lazy var bellPlayerDelegate = BellPlayerDelegate { [weak self] in
-    DispatchQueue.main.async {
-      self?.handleBellFinished()
-    }
-  }
 
   // motionQueue-only state
-  private var detector = ShakeDetector()
+  private let clapper = ClapperModel()
+  /// Strikes are only forwarded between start and stop.
+  private var isMotionArmed = false
+  /// A main-thread recovery for a dropped strike is in flight.
+  private var isRecoveryRequested = false
+  /// Uptime of the last recovery request, to throttle attempts during a long interruption.
+  private var lastRecoveryUptime: TimeInterval = -.infinity
 
   // handlerLock-guarded state
   private let handlerLock = NSLock()
@@ -118,7 +104,7 @@ final class BellEngine: @unchecked Sendable {
 
     sensitivity = ShakeSensitivity(rawOrDefault: storedSensitivity)
     // No motion updates exist yet, so motionQueue-owned state can be set directly here.
-    detector.sensitivity = sensitivity
+    clapper.sensitivity = sensitivity
 
     let center = NotificationCenter.default
 
@@ -216,9 +202,17 @@ final class BellEngine: @unchecked Sendable {
     }
 
     try activateSession()
-    preparePlayersIfNeeded()
+    cancelIdleShutdown()
+
+    do {
+      try output.start()
+    } catch {
+      // Releases the prepared engine too, so a later route change cannot restart it while off.
+      shutDownOutput()
+      throw BellEngineError.audioOutputStartFailed(error)
+    }
+
     isRunning = true
-    playSilenceLoop()
     startMotionUpdates()
     notifyRunningChange(source: source)
   }
@@ -232,10 +226,9 @@ final class BellEngine: @unchecked Sendable {
 
     isRunning = false
     stopNativeHeartbeat()
-    motionManager.stopAccelerometerUpdates()
-    silencePlayer?.stop()
-    // If a bell is still ringing this is skipped; handleBellFinished() deactivates later.
-    deactivateSession()
+    stopMotionUpdates()
+    // A bell that is still ringing finishes first; the idle check then releases the session.
+    releaseOutputWhenSilent()
     notifyRunningChange(source: source)
   }
 
@@ -247,14 +240,27 @@ final class BellEngine: @unchecked Sendable {
     sensitivity = newSensitivity
     UserDefaults.standard.set(newSensitivity.rawValue, forKey: Self.sensitivityDefaultsKey)
     motionQueue.addOperation { [weak self] in
-      self?.detector.sensitivity = newSensitivity
+      self?.clapper.sensitivity = newSensitivity
     }
   }
 
+  /// Bear tap: one strike (Spec §3.4). While off, the output runs only until the ring dies away.
   func ringOnce() {
     dispatchPrecondition(condition: .onQueue(.main))
-    preparePlayersIfNeeded()
-    ring(volume: 1.0)
+
+    guard ensureOutputActive() else {
+      if !isRunning {
+        shutDownOutput()
+      }
+
+      return
+    }
+
+    output.strike(loudness: Self.ringOnceLoudness, brightness: Self.ringOnceBrightness)
+
+    if !isRunning {
+      releaseOutputWhenSilent()
+    }
   }
 
   // MARK: - Audio session
@@ -270,32 +276,44 @@ final class BellEngine: @unchecked Sendable {
       isSessionActive = false
       throw BellEngineError.audioSessionActivationFailed(error)
     }
+
+    do {
+      try session.setPreferredIOBufferDuration(Self.preferredIOBufferDuration)
+    } catch {
+      logger.debug("Preferred IO buffer duration rejected: \(error.localizedDescription, privacy: .public)")
+    }
   }
 
-  /// Recovers from interruptions whose `.ended` notification never arrived:
-  /// reactivates the session if needed and, while running, restarts the silence loop.
-  private func ensureSessionActive() {
+  /// Recovers from interruptions whose `.ended` notification never arrived: reactivates the
+  /// session if needed and restarts the output if it is not rendering. Returns whether it renders.
+  @discardableResult
+  private func ensureOutputActive() -> Bool {
     if !isSessionActive {
       do {
         try activateSession()
       } catch {
         logger.error("Audio session reactivation failed: \(error.localizedDescription, privacy: .public)")
 
-        return
+        return false
       }
     }
 
-    if isRunning {
-      playSilenceLoop()
+    if output.isActive {
+      return true
     }
+
+    do {
+      try output.start()
+    } catch {
+      logger.error("Audio output start failed: \(error.localizedDescription, privacy: .public)")
+
+      return false
+    }
+
+    return true
   }
 
   private func deactivateSession() {
-    // Let a bell that is still ringing finish before releasing the session.
-    guard !isAnyBellPlaying else {
-      return
-    }
-
     do {
       try AVAudioSession.sharedInstance().setActive(false, options: [.notifyOthersOnDeactivation])
     } catch {
@@ -305,124 +323,82 @@ final class BellEngine: @unchecked Sendable {
     isSessionActive = false
   }
 
-  // MARK: - Players
+  // MARK: - Idle shutdown (main thread)
 
-  private var isAnyBellPlaying: Bool {
-    bellPlayers.contains(where: { $0.isPlaying })
-  }
-
-  private func preparePlayersIfNeeded() {
-    if bellPlayers.isEmpty, let bellURL = resourceURL(named: Self.bellResourceName) {
-      let delegate = bellPlayerDelegate
-
-      bellPlayers = (0..<Self.bellPoolSize).compactMap { _ in
-        let player = makePlayer(url: bellURL)
-
-        player?.delegate = delegate
-
-        return player
-      }
-      nextBellIndex = 0
-    }
-
-    if silencePlayer == nil, let silenceURL = resourceURL(named: Self.silenceResourceName) {
-      let player = makePlayer(url: silenceURL)
-
-      player?.numberOfLoops = -1
-      player?.volume = 1.0
-      silencePlayer = player
-    }
-  }
-
-  private func discardPlayers() {
-    bellPlayers.forEach {
-      $0.delegate = nil
-      $0.stop()
-    }
-    bellPlayers = []
-    nextBellIndex = 0
-    silencePlayer?.stop()
-    silencePlayer = nil
-  }
-
-  private func makePlayer(url: URL) -> AVAudioPlayer? {
-    do {
-      let player = try AVAudioPlayer(contentsOf: url)
-
-      player.prepareToPlay()
-
-      return player
-    } catch {
-      logger.error("Failed to create player for \(url.lastPathComponent, privacy: .public): \(error.localizedDescription, privacy: .public)")
-
-      return nil
-    }
-  }
-
-  private func resourceURL(named name: String) -> URL? {
-    let candidates = [
-      Bundle(for: BellEngine.self)
-        .url(forResource: Self.assetsBundleName, withExtension: "bundle")
-        .flatMap { Bundle(url: $0) },
-      Bundle.main
-        .url(forResource: Self.assetsBundleName, withExtension: "bundle")
-        .flatMap { Bundle(url: $0) },
-      Bundle(for: BellEngine.self),
-      Bundle.main,
-    ]
-
-    for case let bundle? in candidates {
-      if let url = bundle.url(forResource: name, withExtension: Self.wavExtension) {
-        return url
-      }
-    }
-
-    logger.error("Missing resource \(name, privacy: .public).\(Self.wavExtension, privacy: .public)")
-
-    return nil
-  }
-
-  private func playSilenceLoop() {
-    guard let player = silencePlayer else {
-      logger.error("Silence player unavailable; background keep-alive disabled")
-
-      return
-    }
-
-    if !player.isPlaying {
-      player.play()
-    }
-  }
-
-  private func ring(volume: Float) {
-    guard !bellPlayers.isEmpty else {
-      logger.error("Bell players unavailable")
-
-      return
-    }
-
-    ensureSessionActive()
-
-    let player = bellPlayers[nextBellIndex]
-
-    nextBellIndex = (nextBellIndex + 1) % bellPlayers.count
-    player.stop()
-    player.volume = volume
-    player.currentTime = 0
-    player.prepareToPlay()
-    player.play()
-  }
-
-  /// Releases a session that only a bell was holding (engine off, e.g. `ringOnce` or
-  /// a `stop()` that deferred deactivation) once the last ringing bell has finished.
-  private func handleBellFinished() {
+  /// While the engine is off, stops the output and releases the session once the synth has been
+  /// silent for `idleShutdownDelay` (`ringOnce`, or a `stop()` during a ring). Starting cancels it.
+  private func releaseOutputWhenSilent() {
     dispatchPrecondition(condition: .onQueue(.main))
 
-    guard !isRunning, isSessionActive else {
+    if !output.isActive {
+      shutDownOutput()
+
       return
     }
 
+    guard idleShutdownTimer == nil else {
+      return
+    }
+
+    let timer = DispatchSource.makeTimerSource(queue: .main)
+
+    silentSinceUptime = nil
+    timer.schedule(deadline: .now() + Self.idleCheckInterval, repeating: Self.idleCheckInterval)
+    timer.setEventHandler { [weak self] in
+      self?.handleIdleCheck()
+    }
+    timer.resume()
+    idleShutdownTimer = timer
+  }
+
+  private func handleIdleCheck() {
+    dispatchPrecondition(condition: .onQueue(.main))
+
+    if isRunning {
+      cancelIdleShutdown()
+
+      return
+    }
+
+    // An interrupted or reset output never renders the remaining ring, so release right away.
+    if !output.isActive {
+      cancelIdleShutdown()
+      shutDownOutput()
+
+      return
+    }
+
+    if !output.isSilent {
+      silentSinceUptime = nil
+
+      return
+    }
+
+    let now = ProcessInfo.processInfo.systemUptime
+
+    guard let silentSince = silentSinceUptime else {
+      silentSinceUptime = now
+
+      return
+    }
+
+    guard now - silentSince >= Self.idleShutdownDelay else {
+      return
+    }
+
+    cancelIdleShutdown()
+    shutDownOutput()
+  }
+
+  private func shutDownOutput() {
+    output.stop()
     deactivateSession()
+  }
+
+  private func cancelIdleShutdown() {
+    idleShutdownTimer?.cancel()
+    idleShutdownTimer = nil
+    silentSinceUptime = nil
   }
 
   // MARK: - Motion
@@ -435,7 +411,8 @@ final class BellEngine: @unchecked Sendable {
     }
 
     motionQueue.addOperation { [weak self] in
-      self?.detector.reset()
+      self?.clapper.reset()
+      self?.isMotionArmed = true
     }
 
     motionManager.accelerometerUpdateInterval = Self.accelerometerInterval
@@ -448,24 +425,59 @@ final class BellEngine: @unchecked Sendable {
         return
       }
 
-      let acceleration = data.acceleration
-      let volume = self.detector.process(
-        x: acceleration.x,
-        y: acceleration.y,
-        z: acceleration.z,
-        timestamp: data.timestamp
-      )
+      self.handleAccelerometerSample(data.acceleration, timestamp: data.timestamp)
+    }
+  }
 
-      guard let volume else {
+  private func stopMotionUpdates() {
+    motionManager.stopAccelerometerUpdates()
+    // Queued after any in-flight samples, so none of them strikes once stopped.
+    motionQueue.addOperation { [weak self] in
+      self?.isMotionArmed = false
+    }
+  }
+
+  /// motionQueue: clapper physics → synth strikes (thread-safe, no main hop).
+  private func handleAccelerometerSample(_ acceleration: CMAcceleration, timestamp: TimeInterval) {
+    guard isMotionArmed else {
+      return
+    }
+
+    let strikes = clapper.process(
+      x: acceleration.x,
+      y: acceleration.y,
+      z: acceleration.z,
+      timestamp: timestamp
+    )
+
+    for strike in strikes {
+      let level = ClapperModel.loudness(velocity: strike.velocity, sensitivity: clapper.sensitivity)
+
+      if !output.strike(loudness: level.loudness, brightness: level.brightness) {
+        requestOutputRecovery()
+      }
+    }
+  }
+
+  /// motionQueue: a strike was dropped because the output is not rendering (e.g. an interruption
+  /// whose `.ended` never came). Asks main to recover: one request in flight, at most one per second.
+  private func requestOutputRecovery() {
+    let now = ProcessInfo.processInfo.systemUptime
+
+    guard !isRecoveryRequested, now - lastRecoveryUptime >= Self.recoveryRequestInterval else {
+      return
+    }
+
+    lastRecoveryUptime = now
+    isRecoveryRequested = true
+    DispatchQueue.main.async { [weak self] in
+      guard let self else {
         return
       }
 
-      DispatchQueue.main.async { [weak self] in
-        guard let self, self.isRunning else {
-          return
-        }
-
-        self.ring(volume: volume)
+      self.resumeAfterInterruption()
+      self.motionQueue.addOperation { [weak self] in
+        self?.isRecoveryRequested = false
       }
     }
   }
@@ -490,8 +502,10 @@ final class BellEngine: @unchecked Sendable {
 
       switch type {
       case .began:
-        // Mark inactive so the next ring (or didBecomeActive) reactivates the session.
+        // The system stopped the engine. Mark both inactive so `.ended`, the next strike or
+        // didBecomeActive reactivates the session and restarts the output.
         self.isSessionActive = false
+        self.output.markInterrupted()
       case .ended:
         let shouldResume = options.contains(.shouldResume)
 
@@ -510,15 +524,15 @@ final class BellEngine: @unchecked Sendable {
         return
       }
 
+      // Every audio object is invalid now; the output rebuilds its engine and synth on start.
       self.isSessionActive = false
-      self.discardPlayers()
+      self.output.reset()
 
       guard self.isRunning else {
         return
       }
 
-      self.preparePlayersIfNeeded()
-      self.ensureSessionActive()
+      self.ensureOutputActive()
     }
   }
 
@@ -541,7 +555,7 @@ final class BellEngine: @unchecked Sendable {
 
   /// Live Activity button press. Posted from the intent's (background) thread, and `perform()`
   /// returns right after posting, so the transition finishes on main (`main.sync`) before this
-  /// returns. Once started, the silence loop's audio background mode keeps the app alive.
+  /// returns. Once started, the running audio engine (audio background mode) keeps the app alive.
   @objc private func handleWidgetsUserInteraction(_ notification: Notification) {
     let eventData = notification.userInfo?["eventData"] as? [String: Any]
 
@@ -607,7 +621,7 @@ final class BellEngine: @unchecked Sendable {
     }
   }
 
-  /// A background cold launch stays alive once started: the engine activates audio and plays the silence loop.
+  /// A background cold launch stays alive once started: the engine activates audio and keeps the synth output running.
   private func handleLiveActivityStart(hasHandler: Bool) {
     guard !isRunning else {
       return
@@ -750,6 +764,6 @@ final class BellEngine: @unchecked Sendable {
       return
     }
 
-    ensureSessionActive()
+    ensureOutputActive()
   }
 }
