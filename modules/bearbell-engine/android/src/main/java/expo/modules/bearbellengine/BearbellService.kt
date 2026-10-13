@@ -17,15 +17,21 @@ import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
 import android.hardware.SensorManager
 import android.os.Build
+import android.os.Handler
+import android.os.HandlerThread
 import android.os.IBinder
 import android.os.PowerManager
-import android.os.SystemClock
 import android.util.Log
 
-/** Foreground service that keeps shake detection alive in the background (Spec §4.2). */
+/** Foreground service that keeps the clapper simulation alive in the background (Spec §4.2). */
 class BearbellService : Service(), SensorEventListener {
-  private val detector = ShakeDetector()
+  // 센서 스레드에서만 접근한다 (reset도 같은 스레드로 post)
+  private val clapper = ClapperModel()
   private var sensorManager: SensorManager? = null
+  private var sensorThread: HandlerThread? = null
+
+  // 정지 후 이미 큐에 쌓인 센서 이벤트로 울리지 않게 한다
+  @Volatile private var isSensing = false
   private var isSensorRegistered = false
   private var wakeLock: PowerManager.WakeLock? = null
   private var isForeground = false
@@ -100,8 +106,11 @@ class BearbellService : Service(), SensorEventListener {
   }
 
   override fun onDestroy() {
+    isSensing = false
     sensorManager?.unregisterListener(this)
     isSensorRegistered = false
+    sensorThread?.quit()
+    sensorThread = null
 
     wakeLock?.let {
       if (it.isHeld) {
@@ -125,19 +134,26 @@ class BearbellService : Service(), SensorEventListener {
   override fun onBind(intent: Intent?): IBinder? = null
 
   override fun onSensorChanged(event: SensorEvent) {
-    if (event.sensor.type != Sensor.TYPE_ACCELEROMETER) {
+    if (!isSensing || event.sensor.type != Sensor.TYPE_ACCELEROMETER) {
       return
     }
 
-    val volume = detector.process(
-      event.values[0] / STANDARD_GRAVITY,
-      event.values[1] / STANDARD_GRAVITY,
-      event.values[2] / STANDARD_GRAVITY,
-      SystemClock.elapsedRealtime(),
-      EngineState.sensitivity,
-    ) ?: return
+    val sensitivity = EngineState.sensitivity
 
-    BellPlayer.play(this, volume)
+    clapper.sensitivity = sensitivity
+
+    val strikes = clapper.process(
+      event.values[0] / ClapperModel.STANDARD_GRAVITY,
+      event.values[1] / ClapperModel.STANDARD_GRAVITY,
+      event.values[2] / ClapperModel.STANDARD_GRAVITY,
+      event.timestamp / NANOS_PER_SECOND,
+    )
+
+    for (strike in strikes) {
+      val sound = ClapperModel.loudness(strike.velocity, sensitivity)
+
+      BellAudioOutput.strike(sound.loudness, sound.brightness)
+    }
   }
 
   override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) = Unit
@@ -287,8 +303,21 @@ class BearbellService : Service(), SensorEventListener {
       sensorManager = it
     } ?: return
     val accelerometer = manager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER) ?: return
+    val thread = sensorThread ?: HandlerThread(SENSOR_THREAD_NAME).also {
+      it.start()
+      sensorThread = it
+    }
+    val handler = Handler(thread.looper)
 
-    isSensorRegistered = manager.registerListener(this, accelerometer, SensorManager.SENSOR_DELAY_GAME)
+    // 이벤트보다 먼저 같은 스레드에서 실행되므로 추가 정지 상태에서 시작한다
+    handler.post { clapper.reset() }
+    isSensing = true
+
+    isSensorRegistered = manager.registerListener(this, accelerometer, SENSOR_PERIOD_US, handler)
+
+    if (!isSensorRegistered) {
+      isSensing = false
+    }
   }
 
   // 가속도계는 non-wakeup 센서라 화면이 꺼지면 CPU 슬립 시 이벤트가 끊긴다.
@@ -322,7 +351,11 @@ class BearbellService : Service(), SensorEventListener {
     // FLAG_IMMUTABLE is API 23+, always available on minSdk 24
     private const val PENDING_INTENT_FLAGS = PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
     private const val WAKE_LOCK_TAG = "bearbell:engine"
-    private const val STANDARD_GRAVITY = 9.80665f
+    private const val SENSOR_THREAD_NAME = "bearbell-sensor"
+
+    // 100Hz (Spec §3.1)
+    private const val SENSOR_PERIOD_US = 10_000
+    private const val NANOS_PER_SECOND = 1e9
 
     /** Removes the "off" notification left by the notification stop action, if any. */
     fun cancelOffNotification(context: Context) {

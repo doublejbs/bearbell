@@ -45,3 +45,6 @@ modules/*/android/build/
 modules/*/android/.gradle/
 modules/*/android/.cxx/
 modules/*/ios/build/
+
+# bell tone reference output (scripts/GenerateBellSounds.mjs)
+scripts/output/

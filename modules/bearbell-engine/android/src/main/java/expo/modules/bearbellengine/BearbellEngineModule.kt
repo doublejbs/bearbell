@@ -99,8 +99,9 @@ class BearbellEngineModule : Module() {
       SensitivityStore.save(context, EngineState.sensitivity)
     }
 
+    // 곰 탭은 고정 세기의 타격 하나 (Spec §3.4)
     Function("ringOnce") {
-      BellPlayer.play(context, 1f)
+      BellAudioOutput.strike(RING_ONCE_LOUDNESS, RING_ONCE_BRIGHTNESS)
     }
   }
 
@@ -118,5 +119,7 @@ class BearbellEngineModule : Module() {
 
   companion object {
     private const val RUNNING_CHANGE_EVENT = "onRunningChange"
+    private const val RING_ONCE_LOUDNESS = 0.9
+    private const val RING_ONCE_BRIGHTNESS = 0.85
   }
 }

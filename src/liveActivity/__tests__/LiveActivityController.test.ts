@@ -76,7 +76,7 @@ describe('LiveActivityController', () => {
 
     expect(leftover.end).toHaveBeenCalledWith('immediate');
     expect(mockedActivity.start).toHaveBeenCalledWith(
-      expect.objectContaining({ sensitivityLabel: '예민', startedAtMs: NOW_MS, isArmed: true }),
+      expect.objectContaining({ sensitivityLabel: '짤랑짤랑', startedAtMs: NOW_MS, isArmed: true }),
       undefined,
       new Date(NOW_MS + STALE_AFTER_MS),
     );
@@ -92,10 +92,10 @@ describe('LiveActivityController', () => {
 
     expect(mockedActivity.start).toHaveBeenCalledWith(
       expect.objectContaining({
-        sensitivityLabel: 'Medium',
+        sensitivityLabel: 'Ding',
         copy: expect.objectContaining({
           armedTitle: 'bearbell on',
-          armedDetail: 'Medium sensitivity · Shake to ring',
+          armedDetail: 'Ding · Shake to ring',
           offTitle: 'bearbell off',
           stopLabel: 'Turn off',
           startLabel: 'Turn on',
@@ -113,7 +113,7 @@ describe('LiveActivityController', () => {
       expect.objectContaining({
         copy: expect.objectContaining({
           armedTitle: 'bearbell 켜짐',
-          armedDetail: '감도 예민 · 흔들면 울려요',
+          armedDetail: '짤랑짤랑 · 흔들면 울려요',
           staleTitle: 'bearbell 상태 확인 필요',
           offDetail: '버튼을 눌러 다시 켤 수 있어요',
           compactOff: '꺼짐',
@@ -149,7 +149,7 @@ describe('LiveActivityController', () => {
     await updateLiveActivity(Sensitivity.Low);
 
     expect(instance.update).toHaveBeenCalledWith(
-      expect.objectContaining({ sensitivityLabel: '둔감', startedAtMs: NOW_MS, isArmed: true }),
+      expect.objectContaining({ sensitivityLabel: '조용히', startedAtMs: NOW_MS, isArmed: true }),
       new Date(NOW_MS + 5_000 + STALE_AFTER_MS),
     );
   });
@@ -165,7 +165,7 @@ describe('LiveActivityController', () => {
 
     expect(instance.update).toHaveBeenCalledTimes(1);
     expect(instance.update).toHaveBeenLastCalledWith(
-      expect.objectContaining({ sensitivityLabel: '보통', startedAtMs: NOW_MS, isArmed: true }),
+      expect.objectContaining({ sensitivityLabel: '딸랑', startedAtMs: NOW_MS, isArmed: true }),
       new Date(NOW_MS + HEARTBEAT_MS + STALE_AFTER_MS),
     );
 
@@ -189,7 +189,7 @@ describe('LiveActivityController', () => {
     await jest.advanceTimersByTimeAsync(HEARTBEAT_MS);
 
     expect(instance.update).toHaveBeenLastCalledWith(
-      expect.objectContaining({ sensitivityLabel: '예민', startedAtMs: NOW_MS, isArmed: true }),
+      expect.objectContaining({ sensitivityLabel: '짤랑짤랑', startedAtMs: NOW_MS, isArmed: true }),
       expect.any(Date),
     );
   });
@@ -226,7 +226,7 @@ describe('LiveActivityController', () => {
 
     expect(instance.end).not.toHaveBeenCalled();
     expect(instance.update).toHaveBeenLastCalledWith(
-      expect.objectContaining({ sensitivityLabel: '보통', startedAtMs: NOW_MS, isArmed: false }),
+      expect.objectContaining({ sensitivityLabel: '딸랑', startedAtMs: NOW_MS, isArmed: false }),
     );
     expect(instance.update.mock.lastCall).toHaveLength(1);
 
@@ -247,7 +247,7 @@ describe('LiveActivityController', () => {
     await setLiveActivityArmed(true, Sensitivity.High);
 
     expect(instance.update).toHaveBeenLastCalledWith(
-      expect.objectContaining({ sensitivityLabel: '예민', startedAtMs: NOW_MS + 10_000, isArmed: true }),
+      expect.objectContaining({ sensitivityLabel: '짤랑짤랑', startedAtMs: NOW_MS + 10_000, isArmed: true }),
       new Date(NOW_MS + 10_000 + STALE_AFTER_MS),
     );
 
@@ -256,7 +256,7 @@ describe('LiveActivityController', () => {
     expect(instance.update).toHaveBeenCalledTimes(3);
   });
 
-  it('이미 켜짐 표시인 인스턴스에 켜짐을 다시 적용하면 경과 타이머 시작 시각을 유지한다', async () => {
+  it('이미 켜짐 표시인 인스턴스에 켜짐을 다시 적용하면 네이티브 props 패처·복원 호환을 위해 시작 시각을 유지한다', async () => {
     const instance = createInstance();
 
     mockedActivity.start.mockReturnValue(instance);
@@ -267,7 +267,7 @@ describe('LiveActivityController', () => {
     await setLiveActivityArmed(true, Sensitivity.High);
 
     expect(instance.update).toHaveBeenLastCalledWith(
-      expect.objectContaining({ sensitivityLabel: '예민', startedAtMs: NOW_MS, isArmed: true }),
+      expect.objectContaining({ sensitivityLabel: '짤랑짤랑', startedAtMs: NOW_MS, isArmed: true }),
       new Date(NOW_MS + 30_000 + STALE_AFTER_MS),
     );
   });
@@ -284,7 +284,7 @@ describe('LiveActivityController', () => {
 
     expect(instance.update).toHaveBeenLastCalledWith(
       expect.objectContaining({
-        sensitivityLabel: '中',
+        sensitivityLabel: 'チリン',
         copy: expect.objectContaining({ armedTitle: 'bearbell オン' }),
       }),
       expect.any(Date),
@@ -295,7 +295,7 @@ describe('LiveActivityController', () => {
     await setLiveActivityArmed(true, Sensitivity.Low);
 
     expect(mockedActivity.start).toHaveBeenCalledWith(
-      expect.objectContaining({ sensitivityLabel: '둔감', startedAtMs: NOW_MS, isArmed: true }),
+      expect.objectContaining({ sensitivityLabel: '조용히', startedAtMs: NOW_MS, isArmed: true }),
       undefined,
       new Date(NOW_MS + STALE_AFTER_MS),
     );

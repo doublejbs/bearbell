@@ -14,7 +14,7 @@ const STALE_AFTER_MS = 3 * 60 * 1000;
 
 const HEARTBEAT_INTERVAL_MS = 60 * 1000;
 
-// 현재 Live Activity 의 props — 감도 갱신 시 경과 타이머가 초기화되지 않도록 시작 시각을 유지하고 heartbeat 가 재전송한다
+// 현재 Live Activity 의 props — 감도 갱신 시 네이티브 props 패처·복원 로직과의 호환을 위해 시작 시각을 유지하고 heartbeat 가 재전송한다
 let currentProps: BearbellLiveActivityProps | null = null;
 
 // heartbeat 가 매 틱 현재 기기 언어로 문구를 다시 만들 수 있도록 현재 감도를 함께 보관한다 (docs/Spec.md §2.1)
@@ -132,7 +132,7 @@ const createArmedProps = (sensitivity: Sensitivity): BearbellLiveActivityProps =
   isArmed: true,
 });
 
-// 꺼짐 전환·감도 갱신용 props — 경과 타이머가 초기화되지 않도록 기존 시작 시각을 유지한다
+// 꺼짐 전환·감도 갱신용 props — 네이티브 props 패처·복원 로직과의 호환을 위해 기존 시작 시각을 유지한다
 const createUpdatedProps = (sensitivity: Sensitivity, isArmed: boolean): BearbellLiveActivityProps => ({
   ...createLocalizedFields(sensitivity),
   startedAtMs: currentProps?.startedAtMs ?? Date.now(),
@@ -179,7 +179,7 @@ export const setLiveActivityArmed = async (isArmed: boolean, sensitivity: Sensit
       return;
     }
 
-    // 이미 켜진 인스턴스에 켜짐을 다시 적용하면 경과 타이머가 초기화되지 않도록 시작 시각을 유지한다 (docs/Spec.md §2.1)
+    // 이미 켜진 인스턴스에 켜짐을 다시 적용해도 네이티브 props 패처·복원 로직과의 호환을 위해 시작 시각을 유지한다 (docs/Spec.md §2.1)
     if (isArmed) {
       const isAlreadyArmed = currentProps?.isArmed === true;
       const props: BearbellLiveActivityProps = isAlreadyArmed

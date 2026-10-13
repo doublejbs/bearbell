@@ -1,6 +1,6 @@
 {
   "name": "bearbell",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "main": "AppEntry.ts",
   "dependencies": {
     "@expo-google-fonts/gowun-batang": "^0.4.1",
@@ -37,7 +37,9 @@
     "test": "jest",
     "lint": "expo lint",
     "typecheck": "tsc --noEmit",
-    "generate:sounds": "node --experimental-strip-types scripts/GenerateBellSounds.mjs"
+    "generate:sounds": "node --experimental-strip-types scripts/GenerateBellSounds.mjs",
+    "test:swift": "bash scripts/RunSwiftTests.sh",
+    "test:android": "expo prebuild -p android --no-install && cd android && ./gradlew :bearbell-engine:testDebugUnitTest"
   },
   "private": true,
   "jest": {

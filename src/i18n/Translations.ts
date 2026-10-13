@@ -51,11 +51,11 @@ const KO: Translation = {
     turnOff: '끄기',
   },
   sensitivity: {
-    title: '흔들림 감도',
+    title: '방울 소리',
     labels: {
-      [Sensitivity.High]: '예민',
-      [Sensitivity.Mid]: '보통',
-      [Sensitivity.Low]: '둔감',
+      [Sensitivity.High]: '짤랑짤랑',
+      [Sensitivity.Mid]: '딸랑',
+      [Sensitivity.Low]: '조용히',
     },
   },
   bell: {
@@ -69,7 +69,7 @@ const KO: Translation = {
   },
   liveActivity: {
     armedTitle: 'bearbell 켜짐',
-    armedDetail: (sensitivityLabel) => `감도 ${sensitivityLabel} · 흔들면 울려요`,
+    armedDetail: (sensitivityLabel) => `${sensitivityLabel} · 흔들면 울려요`,
     offTitle: 'bearbell 꺼짐',
     offDetail: '버튼을 눌러 다시 켤 수 있어요',
     staleTitle: 'bearbell 상태 확인 필요',
@@ -93,11 +93,11 @@ const EN: Translation = {
     turnOff: 'Turn off',
   },
   sensitivity: {
-    title: 'Shake sensitivity',
+    title: 'Bell sound',
     labels: {
-      [Sensitivity.High]: 'High',
-      [Sensitivity.Mid]: 'Medium',
-      [Sensitivity.Low]: 'Low',
+      [Sensitivity.High]: 'Jingle',
+      [Sensitivity.Mid]: 'Ding',
+      [Sensitivity.Low]: 'Quiet',
     },
   },
   bell: {
@@ -111,7 +111,7 @@ const EN: Translation = {
   },
   liveActivity: {
     armedTitle: 'bearbell on',
-    armedDetail: (sensitivityLabel) => `${sensitivityLabel} sensitivity · Shake to ring`,
+    armedDetail: (sensitivityLabel) => `${sensitivityLabel} · Shake to ring`,
     offTitle: 'bearbell off',
     offDetail: 'Tap the button to turn it back on',
     staleTitle: 'Check bearbell',
@@ -135,11 +135,11 @@ const JA: Translation = {
     turnOff: 'オフにする',
   },
   sensitivity: {
-    title: '揺れの感度',
+    title: '鈴の音',
     labels: {
-      [Sensitivity.High]: '高',
-      [Sensitivity.Mid]: '中',
-      [Sensitivity.Low]: '低',
+      [Sensitivity.High]: 'チリンチリン',
+      [Sensitivity.Mid]: 'チリン',
+      [Sensitivity.Low]: '静か',
     },
   },
   bell: {
@@ -153,7 +153,7 @@ const JA: Translation = {
   },
   liveActivity: {
     armedTitle: 'bearbell オン',
-    armedDetail: (sensitivityLabel) => `感度 ${sensitivityLabel} · 振ると鳴ります`,
+    armedDetail: (sensitivityLabel) => `${sensitivityLabel} · 振ると鳴ります`,
     offTitle: 'bearbell オフ',
     offDetail: 'ボタンを押すと再びオンにできます',
     staleTitle: 'bearbell の状態を確認',

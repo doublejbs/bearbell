@@ -6,6 +6,12 @@ final class AudioSessionActivationException: GenericException<String>, @unchecke
   }
 }
 
+final class AudioOutputStartException: GenericException<String>, @unchecked Sendable {
+  override var reason: String {
+    "Failed to start the audio output: \(param)"
+  }
+}
+
 public class BearbellEngineModule: Module {
   public func definition() -> ModuleDefinition {
     Name("BearbellEngine")
@@ -50,6 +56,8 @@ public class BearbellEngineModule: Module {
         try BellEngine.shared.start(sensitivity: sensitivity, source: .app)
       } catch BellEngineError.audioSessionActivationFailed(let underlying) {
         throw AudioSessionActivationException(underlying.localizedDescription)
+      } catch BellEngineError.audioOutputStartFailed(let underlying) {
+        throw AudioOutputStartException(underlying.localizedDescription)
       }
     }
     .runOnQueue(.main)

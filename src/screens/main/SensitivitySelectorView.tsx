@@ -13,6 +13,9 @@ type Props = {
 
 const SENSITIVITY_OPTIONS = [Sensitivity.High, Sensitivity.Mid, Sensitivity.Low] as const;
 
+// 긴 라벨(チリンチリン 등)이 좁은 화면에서 칸을 넘지 않도록 줄일 수 있는 하한 (docs/Spec.md §1.4)
+const LABEL_MIN_FONT_SCALE = 0.7;
+
 const SensitivitySelectorView = ({ value, title, labels, onSelect }: Props) => (
   <View style={styles.container}>
     <Text style={styles.label}>{title}</Text>
@@ -30,7 +33,12 @@ const SensitivitySelectorView = ({ value, title, labels, onSelect }: Props) => (
             accessibilityState={{ checked: isChecked }}
             onPress={() => onSelect(option)}
           >
-            <Text style={[styles.segmentText, isChecked && styles.segmentTextChecked]}>
+            <Text
+              style={[styles.segmentText, isChecked && styles.segmentTextChecked]}
+              numberOfLines={1}
+              adjustsFontSizeToFit
+              minimumFontScale={LABEL_MIN_FONT_SCALE}
+            >
               {label}
             </Text>
           </Pressable>
@@ -59,6 +67,7 @@ const styles = StyleSheet.create({
   },
   segment: {
     flex: 1,
+    paddingHorizontal: 6,
     height: 44,
     borderRadius: 12,
     alignItems: 'center',
