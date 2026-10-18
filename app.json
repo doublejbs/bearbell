@@ -2,7 +2,6 @@
   "expo": {
     "name": "bearbell",
     "slug": "bearbell",
-    "scheme": "bearbell",
     "version": "1.0.2",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
