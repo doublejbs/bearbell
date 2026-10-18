@@ -125,7 +125,7 @@ bearbell は、スマホを振ると熊鈴の音が鳴るアプリです。
 ※ オンにしている間はバッテリーを追加で消費します。
 ```
 
-## 繁體中文 (zh-Hant · 台灣) — 1.0.3
+## 繁體中文 (zh-Hant · 台灣) — 1.0.2
 
 > 키워드 전략: 이름·부제에 있는 '熊鈴'·'登山'은 빼고, 대만에서 쓰는 산행어(爬山·健行·郊山·步道)와 대만흑곰(台灣黑熊·黑熊), 고산·국립공원 지명(百岳·玉山·雪山·合歡山·太魯閣·雪霸)을 넣었다. 중국어는 한 글자 검색도 있어 '熊'·'鈴'을 끝에 붙였다.
 
@@ -160,7 +160,7 @@ bearbell 是一款搖一搖就會發出熊鈴聲的 App。
 ※ 開啟期間會額外消耗電量。
 ```
 
-## Slovenčina (sk) — 1.0.3
+## Slovenčina (sk) — 1.0.2
 
 > 키워드 전략: 슬로바키아어는 격변화가 많아 이름의 'medveďa'와 다른 꼴(medveď·medvede)을 따로 넣었다. 'Nízke'·'Fatra'는 'Tatry'와 조합돼 Nízke Tatry·Malá/Veľká Fatra 검색에 걸리게 했고, 버섯 채집(huby)도 넣었다.
 
@@ -194,7 +194,7 @@ Poznámka: bearbell je pomôcka, ktorá môže pomôcť znížiť počet stretnu
 Poznámka: Kým je bearbell zapnutý, spotrebúva viac batérie.
 ```
 
-## Polski (pl) — 1.0.3
+## Polski (pl) — 1.0.2
 
 > 키워드 전략: 'bearbell - Dzwonek na niedźwiedzie'는 35자라 이름에 못 넣어, 이름 '…Dzwonek na szlak' + 부제 '…na niedźwiedzie…'로 나눠 'dzwonek na niedźwiedzie' 검색이 이름·부제 조합으로 걸리게 했다. 키워드는 단수형 'niedźwiedź', 곰이 나오는 산지(Bieszczady·Tatry·Beskidy), 버섯 채집(grzyby)을 넣었다.
 
@@ -228,7 +228,7 @@ Uwaga: bearbell to pomoc, która może zmniejszyć ryzyko spotkania z dzikimi zw
 Uwaga: Włączony bearbell zużywa dodatkowo baterię.
 ```
 
-## Română (ro) — 1.0.3
+## Română (ro) — 1.0.2
 
 > 키워드 전략: 이름의 'urs'와 함께 복수형 'urși', 카르파티아와 곰이 자주 나오는 산(Bucegi·Făgăraș), 산행어 단·복수(drumeție·drumeții·traseu)를 넣었다. 'animale'+'sălbatice'는 따로 넣어 'animale sălbatice' 조합 검색에 걸리게 했다.
 
@@ -262,7 +262,7 @@ Notă: bearbell este un ajutor care poate reduce întâlnirile cu animalele săl
 Notă: Cât timp este pornit, bearbell consumă baterie suplimentară.
 ```
 
-## Slovenščina (sl) — 1.0.3
+## Slovenščina (sl) — 1.0.2
 
 > 키워드 전략: 이름의 'medveda'와 다른 꼴(medved·medvedi), 곰 서식지 지명(Kočevje·Kočevski Rog·Snežnik), 슬로베니아 산행어(pohodništvo·hribi·planinarjenje), 버섯 채집(gobe)을 넣었다. 'Kočevski'+'Rog'는 조합 검색용으로 나눴다.
 
@@ -296,7 +296,7 @@ Opomba: bearbell je pripomoček, ki lahko pomaga zmanjšati srečanja z divjimi 
 Opomba: Ko je bearbell vklopljen, porabi dodatno baterijo.
 ```
 
-## Hrvatski (hr) — 1.0.3
+## Hrvatski (hr) — 1.0.2
 
 > 키워드 전략: 이름의 'medvjeda'와 다른 꼴(medvjed·medvjedi), 곰 서식지(Gorski kotar·Velebit·Risnjak·Lika), 산행어(planinarenje·planina·staza), 버섯 채집(gljive)을 넣었다. 'Gorski kotar'는 지명이라 붙여 썼다.
 
@@ -330,7 +330,7 @@ Napomena: bearbell je pomagalo koje može smanjiti susrete s divljim životinjam
 Napomena: Dok je uključen, bearbell troši dodatnu bateriju.
 ```
 
-## Italiano (it) — 1.0.3
+## Italiano (it) — 1.0.2
 
 > 키워드 전략: 이름의 'antiorso'는 한 단어라 'orso'·'orsi'를 따로 넣었고(→ 'campanello orso' 조합 검색), 곰이 나오는 지역(Trentino·Abruzzo·Dolomiti), 산행어(escursionismo·trekking·sentiero), 소방울(campanaccio), 버섯 채집(funghi)을 넣었다.
 
