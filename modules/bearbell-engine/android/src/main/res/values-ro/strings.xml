@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <string name="bearbell_channel_name">Starea bearbell</string>
+  <string name="bearbell_running_title">bearbell pornit</string>
+  <string name="bearbell_running_text">Scutură și clopoțelul va suna</string>
+  <string name="bearbell_off_title">bearbell oprit</string>
+  <string name="bearbell_off_text">Atinge „Pornește” ca să detecteze din nou mișcarea</string>
+  <string name="bearbell_action_turn_off">Oprește</string>
+  <string name="bearbell_action_turn_on">Pornește</string>
+</resources>

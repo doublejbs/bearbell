@@ -1,0 +1,5 @@
+{
+  "ios": {
+    "NSMotionUsageDescription": "bearbell usa i sensori di movimento per far suonare il campanello quando rileva movimenti in tasca."
+  }
+}

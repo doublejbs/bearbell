@@ -20,7 +20,14 @@
         "CFBundleLocalizations": [
           "en",
           "ko",
-          "ja"
+          "ja",
+          "zh-Hant",
+          "sk",
+          "pl",
+          "ro",
+          "sl",
+          "hr",
+          "it"
         ]
       },
       "appleTeamId": "SUZ336H4W3"
@@ -56,12 +63,26 @@
             "ios": [
               "en",
               "ko",
-              "ja"
+              "ja",
+              "zh-Hant",
+              "sk",
+              "pl",
+              "ro",
+              "sl",
+              "hr",
+              "it"
             ],
             "android": [
               "en",
               "ko",
-              "ja"
+              "ja",
+              "zh-TW",
+              "sk",
+              "pl",
+              "ro",
+              "sl",
+              "hr",
+              "it"
             ]
           }
         }
@@ -79,7 +100,14 @@
     ],
     "locales": {
       "ko": "./languages/ko.json",
-      "ja": "./languages/ja.json"
+      "ja": "./languages/ja.json",
+      "zh-Hant": "./languages/zh-Hant.json",
+      "sk": "./languages/sk.json",
+      "pl": "./languages/pl.json",
+      "ro": "./languages/ro.json",
+      "sl": "./languages/sl.json",
+      "hr": "./languages/hr.json",
+      "it": "./languages/it.json"
     },
     "extra": {
       "eas": {

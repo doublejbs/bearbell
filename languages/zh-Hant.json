@@ -1,0 +1,5 @@
+{
+  "ios": {
+    "NSMotionUsageDescription": "為了偵測口袋中的搖晃並讓鈴鐺響起，bearbell 會使用動作感測器。"
+  }
+}

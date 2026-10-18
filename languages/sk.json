@@ -1,0 +1,5 @@
+{
+  "ios": {
+    "NSMotionUsageDescription": "bearbell používa pohybové senzory, aby zazvonil zvončekom, keď zistí otrasy vo vrecku."
+  }
+}

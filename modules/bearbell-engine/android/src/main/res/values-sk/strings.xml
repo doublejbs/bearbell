@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <string name="bearbell_channel_name">Stav bearbell</string>
+  <string name="bearbell_running_title">bearbell zapnutý</string>
+  <string name="bearbell_running_text">Zatras a zvonček zazvoní</string>
+  <string name="bearbell_off_title">bearbell vypnutý</string>
+  <string name="bearbell_off_text">Ťuknutím na „Zapnúť” znova zapneš snímanie otrasov</string>
+  <string name="bearbell_action_turn_off">Vypnúť</string>
+  <string name="bearbell_action_turn_on">Zapnúť</string>
+</resources>

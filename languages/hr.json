@@ -1,0 +1,5 @@
+{
+  "ios": {
+    "NSMotionUsageDescription": "bearbell koristi senzore pokreta kako bi zazvonio zvoncem kad u džepu prepozna protresanje."
+  }
+}
