@@ -364,6 +364,22 @@ Nota: bearbell è un aiuto che può ridurre gli incontri con la fauna selvatica.
 Nota: Tenere bearbell acceso consuma più batteria.
 ```
 
+## Google Play
+
+Play Console 기본 스토어 등록정보는 위 언어별 문안을 그대로 쓰되, 아래만 다르다. 입력용 전체 문안(10개 언어)은 `~/.aside/u/0/store/play/listing.json`에 있다.
+
+| 항목 | Play 값 | App Store와 차이 |
+|---|---|---|
+| 앱 이름 (30자) | 각 언어의 App Store 앱 이름 그대로 | 없음 |
+| 간단한 설명 (80자) | 각 언어의 "짧은 설명 (Play)" 그대로 | App Store 부제·프로모션 텍스트·키워드는 Play에 없음 |
+| 자세한 설명 (4000자) | 각 언어의 설명에서 잠금화면 섹션만 교체 | 아래 참고 |
+
+- **잠금화면 → 알림** — Android 앱에는 잠금화면 Live Activity·Dynamic Island가 없고, 켜 두는 동안 상시 알림에 끄기/켜기 액션 버튼이 붙는다. 그래서 "잠금화면에서 바로 끄고 켜기" 섹션을 "알림에서 바로 끄고 켜기"로 바꾸고, 버튼 이름은 `modules/bearbell-engine/android/src/main/res/values*/strings.xml`의 `bearbell_action_turn_off`/`bearbell_action_turn_on` 문구(끄기/켜기, Turn off/Turn on, オフ/オン, 關閉/開啟, Vypnúť/Zapnúť, Wyłącz/Włącz, Oprește/Pornește, Izklopi/Vklopi, Isključi/Uključi, Spegni/Accendi)를 그대로 쓴다.
+  - 예(한국어): `■ 알림에서 바로 끄고 켜기` / `켜 두는 동안 알림이 표시돼요. 앱을 열지 않아도 알림의 '끄기' 버튼으로 바로 멈추고, '켜기'를 누르면 다시 울려요.`
+- **플랫폼 이름 없음** — iPhone/iOS/App Store 언급은 원래 없으며 Play 문안에도 넣지 않는다. 면책 문구(안전 미보장·배터리 추가 사용)는 그대로 둔다.
+- **Play 정책** — 제목에 이모티콘·대문자 강조·가격/할인·"최고/1위" 표현을 넣지 않고, 설명에 키워드 나열을 하지 않는다. App Store 키워드 목록은 Play에 옮기지 않는다.
+- **언어 (Play Console "언어 추가")** — 한국어 – ko-KR(기본), 영어(미국) – en-US, 일본어 – ja-JP, 중국어(번체) – zh-TW, 슬로바키아어 – sk, 폴란드어 – pl-PL, 루마니아어 – ro, 슬로베니아어 – sl, 크로아티아어 – hr, 이탈리아어 – it-IT.
+
 ## 심사 메모 (App Review / Play 포그라운드 서비스 신고)
 
 **App Store — Notes for Review (영어)**
