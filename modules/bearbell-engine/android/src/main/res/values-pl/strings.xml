@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <string name="bearbell_channel_name">Stan bearbell</string>
+  <string name="bearbell_running_title">bearbell włączony</string>
+  <string name="bearbell_running_text">Potrząśnij, a dzwonek zadzwoni</string>
+  <string name="bearbell_off_title">bearbell wyłączony</string>
+  <string name="bearbell_off_text">Dotknij „Włącz”, aby znów wykrywać wstrząsy</string>
+  <string name="bearbell_action_turn_off">Wyłącz</string>
+  <string name="bearbell_action_turn_on">Włącz</string>
+</resources>

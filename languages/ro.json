@@ -1,0 +1,5 @@
+{
+  "ios": {
+    "NSMotionUsageDescription": "bearbell folosește senzorii de mișcare pentru a suna clopoțelul când detectează scuturături în buzunar."
+  }
+}

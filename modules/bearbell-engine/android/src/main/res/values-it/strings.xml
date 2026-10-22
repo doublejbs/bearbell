@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <string name="bearbell_channel_name">Stato di bearbell</string>
+  <string name="bearbell_running_title">bearbell attivo</string>
+  <string name="bearbell_running_text">Scuoti per far suonare il campanello</string>
+  <string name="bearbell_off_title">bearbell spento</string>
+  <string name="bearbell_off_text">Tocca «Accendi» per rilevare di nuovo i movimenti</string>
+  <string name="bearbell_action_turn_off">Spegni</string>
+  <string name="bearbell_action_turn_on">Accendi</string>
+</resources>

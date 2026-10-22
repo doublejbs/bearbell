@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <string name="bearbell_channel_name">bearbell 狀態</string>
+  <string name="bearbell_running_title">bearbell 已開啟</string>
+  <string name="bearbell_running_text">搖一搖鈴鐺就會響</string>
+  <string name="bearbell_off_title">bearbell 已關閉</string>
+  <string name="bearbell_off_text">點一下「開啟」即可再次偵測搖晃</string>
+  <string name="bearbell_action_turn_off">關閉</string>
+  <string name="bearbell_action_turn_on">開啟</string>
+</resources>

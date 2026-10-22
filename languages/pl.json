@@ -1,0 +1,5 @@
+{
+  "ios": {
+    "NSMotionUsageDescription": "bearbell używa czujników ruchu, aby zadzwonić dzwonkiem, gdy wykryje wstrząsy w kieszeni."
+  }
+}

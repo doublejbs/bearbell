@@ -345,7 +345,7 @@ scripts/RunSwiftTests.sh                               # swift-tests 실행
 - Android: `mediaPlayback` FGS 타입 선언 심사 — 종소리 재생이 서비스의 본질 기능임을 소명, 반려 시 `specialUse`로 전환 검토
 - iOS 1.0.0 (3) 심사 결과(2026-10-08): 2.3.10(설명에 Android 언급) 반려 → 설명을 플랫폼 중립 문안으로 수정(`docs/StoreListing.md`). 2.1(위젯 확장을 추가할 수 없음) 질의 → 위젯 확장은 Live Activity 호스팅용이며 홈 화면 위젯은 없음(`widgets: []`)을 답변. 심사 노트에도 같은 설명을 넣어 재발 방지
 
-## 10. 다국어 (한국어 · 영어 · 일본어)
+## 10. 다국어 (한국어 · 영어 · 일본어 + §10.1 7개 언어)
 
 글로벌 출시(유료 ₩1,100 — 가격은 스토어 콘솔에서 설정, 코드 변경 없음)를 위해 사용자에게 보이는 모든 문구를 3개 언어로 제공한다.
 
@@ -389,8 +389,55 @@ scripts/RunSwiftTests.sh                               # swift-tests 실행
 
 - 일본어·영어 문구는 출시 전 원어민 검수를 권장
 
+### 10.1 곰 방울 사용 국가 언어 추가 (1.0.3)
+
+등산할 때 곰 방울을 실제로 다는 지역을 겨냥해 화면 언어 7개를 추가한다. 2026-10-18 기준 판매 유입이 App Store 검색이라, 현지어 메타데이터·키워드가 필요하다.
+
+| 언어 | `AppLanguage` | 코드 | 겨냥 지역 |
+|---|---|---|---|
+| 繁體中文 | `ZhHant = 'zh-Hant'` | `zh` (간체 포함 모든 `zh`) | 대만 (위산·쉐산 등 고산, 대만흑곰) |
+| Slovenčina | `Sk = 'sk'` | `sk` | 슬로바키아 (타트라·저지 타트라) |
+| Polski | `Pl = 'pl'` | `pl` | 폴란드 (비에슈차디·타트라) |
+| Română | `Ro = 'ro'` | `ro` | 루마니아 (카르파티아, 유럽 최대 불곰 서식지) |
+| Slovenščina | `Sl = 'sl'` | `sl` | 슬로베니아 (코체브예) |
+| Hrvatski | `Hr = 'hr'` | `hr` | 크로아티아 (고르스키 코타르·벨레비트) |
+| Italiano | `It = 'it'` | `it` | 이탈리아 (트렌티노·아브루초) |
+
+- 언어 결정: `resolveLanguage`는 `languageCode`의 기본 부분만 본다. `zh`는 간체·번체 구분 없이 `ZhHant`(영어보다 번체가 간체 사용자에게도 읽기 쉽다). 나머지 규칙(그 외 → 영어)은 그대로
+- 범위: §10과 같다 — `Translations.ts` 7개 언어 추가, Android `values-zh`(간체·번체·지역 모든 `zh`)·`values-sk`·`values-pl`·`values-ro`·`values-sl`·`values-hr`·`values-it` 문자열, `app.json` `locales`(NSMotionUsageDescription)·`CFBundleLocalizations`·`supportedLocales`(iOS `zh-Hant`, Android `zh-TW`)
+- 문구 원칙: "방울" = 각 언어의 곰 방울 통칭(熊鈴, zvonček na medveďa, dzwonek na niedźwiedzie, clopoțel pentru urs, zvonček za medveda, zvonce za medvjeda, campanello antiorso)이 아닌 화면에서는 그냥 "방울/종"(鈴, zvonček, dzwonek, clopoțel, zvonček, zvonce, campanello). 감도 라벨은 의성어 대신 뜻이 통하는 짧은 말로 써도 된다. 버튼 문구는 짧게(화면 폭 기준 영어 이하 길이 권장)
+- 앱 이름은 모든 언어에서 `bearbell`
+- 원어민 검수 전이므로 출시 노트에 남기고, 첫 리뷰·문의에서 어색한 문구를 받으면 바로 고친다
+
+- 7개 언어 문구 (§10 표와 같은 뜻. 반말 명령형 통일. 감도 라벨은 Dynamic Island compact에도 보여 7자 이하, 꺼짐 알림의 버튼 이름은 각 언어 따옴표로 감싼다)
+
+| 키 | 繁體中文 | sk | pl | ro | sl | hr | it |
+|---|---|---|---|---|---|---|---|
+| 켜짐 제목 / 부제 | 搖一搖就會響 / 走路時放進口袋或背包 | Zatras a zazvoní / Pri chôdzi ho nos vo vrecku alebo v batohu | Potrząśnij, a zadzwoni / Podczas marszu trzymaj go w kieszeni lub plecaku | Scutură ca să sune / Ține-l în buzunar sau în rucsac când mergi | Stresi, da zazvoni / Med hojo ga imej v žepu ali nahrbtniku | Protresi da zazvoni / Dok hodaš, drži ga u džepu ili ruksaku | Scuoti per farlo suonare / Tienilo in tasca o nello zaino mentre cammini |
+| 꺼짐 제목 / 부제 | 暫停中 / 需要安靜時請關閉 | Pozastavené / Vypni ho, keď potrebuješ ticho | Wstrzymano / Wyłącz, gdy potrzebujesz ciszy | În pauză / Oprește-l când ai nevoie de liniște | Zaustavljeno / Izklopi ga, ko potrebuješ tišino | Pauzirano / Isključi ga kad ti treba tišina | In pausa / Spegnilo quando serve silenzio |
+| 방울 소리(감도) 제목 | 鈴聲 | Zvuk zvončeka | Dźwięk dzwonka | Sunetul clopoțelului | Zvok zvončka | Zvuk zvonca | Suono del campanello |
+| `high` / `mid` / `low` | 叮鈴叮鈴 / 叮鈴 / 安靜 | Cinkot / Cink / Ticho | Głośno / Średnio / Cicho | Tare / Mediu / Încet | Cin-cin / Cin / Tiho | Cin-cin / Cin / Tiho | Forte / Medio / Piano |
+| 켜기 / 끄기 | 開啟 / 關閉 | Zapnúť / Vypnúť | Włącz / Wyłącz | Pornește / Oprește | Vklopi / Izklopi | Uključi / Isključi | Accendi / Spegni |
+| 곰 버튼 접근성 | 搖響鈴鐺 | Zazvoniť zvončekom | Zadzwoń dzwonkiem | Sună clopoțelul | Zazvoni z zvončkom | Zazvoni zvoncem | Suona il campanello |
+| 권한 안내 제목 | 用通知顯示開啟狀態 | Uvidíš, kedy je bearbell zapnutý | Zobacz, kiedy bearbell jest włączony | Vezi când bearbell este pornit | Poglej, kdaj je bearbell vklopljen | Vidi kad je bearbell uključen | Sai sempre quando bearbell è attivo |
+| 권한 안내 본문 | 即使放在口袋裡，也能透過通知確認 bearbell 是否開啟，點一下通知就能回到 App。不允許通知，鈴鐺也照樣會響。 | Upozornenie ukáže, že bearbell je zapnutý, aj keď máš telefón vo vrecku, a ťuknutím naň sa vrátiš do aplikácie. Zvonček zvoní, aj keď upozornenia nepovolíš. | Powiadomienie pokazuje, że bearbell jest włączony, nawet gdy telefon jest w kieszeni, a dotknięcie powiadomienia przeniesie cię z powrotem do aplikacji. Dzwonek dzwoni, nawet jeśli nie zezwolisz na powiadomienia. | O notificare îți arată că bearbell este pornit, chiar și în buzunar, iar dacă o atingi revii în aplicație. Clopoțelul sună chiar dacă nu permiți notificările. | Obvestilo pokaže, da je bearbell vklopljen, tudi ko je telefon v žepu, z dotikom pa se vrneš v aplikacijo. Zvonček zvoni, tudi če obvestil ne dovoliš. | Obavijest pokazuje da je bearbell uključen, čak i u džepu, a dodirom na nju vraćaš se u aplikaciju. Zvonce zvoni i ako ne dopustiš obavijesti. | Una notifica ti mostra che bearbell è attivo, anche in tasca, e toccandola torni subito all'app. Il campanello suona anche se non consenti le notifiche. |
+| 권한 안내 버튼 | 繼續 | Pokračovať | Dalej | Continuă | Nadaljuj | Nastavi | Continua |
+| LA 켜짐 제목 / 본문 | bearbell 已開啟 / {label} · 搖一搖就會響 | bearbell zapnutý / {label} · Zatras a zazvoní | bearbell włączony / {label} · Potrząśnij, a zadzwoni | bearbell pornit / {label} · Scutură ca să sune | bearbell vklopljen / {label} · Stresi, da zazvoni | bearbell uključen / {label} · Protresi da zazvoni | bearbell attivo / {label} · Scuoti per farlo suonare |
+| LA 꺼짐 제목 / 본문 | bearbell 已關閉 / 點一下按鈕即可重新開啟 | bearbell vypnutý / Ťuknutím na tlačidlo ho znova zapneš | bearbell wyłączony / Dotknij przycisku, aby włączyć ponownie | bearbell oprit / Atinge butonul ca să-l pornești din nou | bearbell izklopljen / Dotakni se gumba, da ga znova vklopiš | bearbell isključen / Dodirni gumb da ga ponovno uključiš | bearbell spento / Tocca il pulsante per riaccenderlo |
+| LA 확인 필요 제목 / 본문 | 確認 bearbell 狀態 / 請打開 App 確認是否已開啟 | Skontroluj bearbell / Otvor aplikáciu a over, či je zapnutý | Sprawdź bearbell / Otwórz aplikację i sprawdź, czy jest włączony | Verifică bearbell / Deschide aplicația ca să confirmi că e pornit | Preveri bearbell / Odpri aplikacijo in preveri, ali je vklopljen | Provjeri bearbell / Otvori aplikaciju i provjeri je li uključen | Controlla bearbell / Apri l'app per verificare che sia attivo |
+| LA compact 꺼짐 / 확인 | 關閉 / 確認 | Vypnuté / Overiť | Wył. / Sprawdź | Oprit / Verifică | Izklop / Preveri | Ugašeno / Provjeri | Spento / Verifica |
+| LA 버튼 끄기 / 켜기 | 關閉 / 開啟 | Vypnúť / Zapnúť | Wyłącz / Włącz | Oprește / Pornește | Izklopi / Vklopi | Isključi / Uključi | Spegni / Accendi |
+| 알림 채널 | bearbell 狀態 | Stav bearbell | Stan bearbell | Starea bearbell | Stanje bearbell | Stanje bearbell | Stato di bearbell |
+| 켜짐 알림 | bearbell 已開啟 / 搖一搖鈴鐺就會響 | bearbell zapnutý / Zatras a zvonček zazvoní | bearbell włączony / Potrząśnij, a dzwonek zadzwoni | bearbell pornit / Scutură și clopoțelul va suna | bearbell vklopljen / Stresi in zvonček zazvoni | bearbell uključen / Protresi i zvonce će zazvoniti | bearbell attivo / Scuoti per far suonare il campanello |
+| 꺼짐 알림 | bearbell 已關閉 / 點一下「開啟」即可再次偵測搖晃 | bearbell vypnutý / Ťuknutím na „Zapnúť” znova zapneš snímanie otrasov | bearbell wyłączony / Dotknij „Włącz”, aby znów wykrywać wstrząsy | bearbell oprit / Atinge „Pornește” ca să detecteze din nou mișcarea | bearbell izklopljen / Dotakni se »Vklopi« za ponovno zaznavanje tresenja | bearbell isključen / Dodirni „Uključi” za ponovno praćenje pokreta | bearbell spento / Tocca «Accendi» per rilevare di nuovo i movimenti |
+| 알림 액션 끄기 / 켜기 | 關閉 / 開啟 | Vypnúť / Zapnúť | Wyłącz / Włącz | Oprește / Pornește | Izklopi / Vklopi | Isključi / Uključi | Spegni / Accendi |
+| NSMotionUsageDescription | 為了偵測口袋中的搖晃並讓鈴鐺響起，bearbell 會使用動作感測器。 | bearbell používa pohybové senzory, aby zazvonil zvončekom, keď zistí otrasy vo vrecku. | bearbell używa czujników ruchu, aby zadzwonić dzwonkiem, gdy wykryje wstrząsy w kieszeni. | bearbell folosește senzorii de mișcare pentru a suna clopoțelul când detectează scuturături în buzunar. | bearbell uporablja senzorje gibanja, da pozvoni z zvončkom, ko v žepu zazna tresenje. | bearbell koristi senzore pokreta kako bi zazvonio zvoncem kad u džepu prepozna protresanje. | bearbell usa i sensori di movimento per far suonare il campanello quando rileva movimenti in tasca. |
+
+- 설정 형식: Expo `locales` 키는 `zh-Hant`(iOS `zh-Hant.lproj` 생성, Android는 `values-b+zh+Hant`), `supportedLocales`는 BCP-47 검증. `supportedLocales.ios`가 빌드 시 `CFBundleLocalizations`를 덮어쓰므로 두 목록을 같게 유지한다
+
 ## 11. 알려진 제한
 
+- iOS: 간체(`zh-Hans`) 기기에서는 JS 화면이 번체로 보이지만, `NSMotionUsageDescription`은 `zh-Hant.lproj`가 선택되지 않아 영어로 떨어질 수 있다(§10.1)
 - iOS: 꺼 둔 뒤 오래 지나 앱이 완전히 잠든(suspend) 상태에서 종료되면 종료 알림이 오지 않아 꺼짐 Live Activity가 남을 수 있다. 켜짐 상태나 끈 직후 종료하면 사라진다(2026-09-28 실기기 확인)
 - Android: 알림으로 끈 뒤 남은 꺼짐 알림은 이후 언어가 바뀌어도 이전 언어로 남는다(서비스가 이미 종료됨). 켜짐 알림은 언어 변경을 반영한다
 

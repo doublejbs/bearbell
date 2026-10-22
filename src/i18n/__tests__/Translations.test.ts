@@ -23,7 +23,7 @@ const collectLeafValues = (value: unknown): unknown[] => {
 describe('TRANSLATIONS', () => {
   const languages = Object.values(AppLanguage);
 
-  it('세 언어가 모두 있다', () => {
+  it('모든 언어가 있다', () => {
     expect(Object.keys(TRANSLATIONS).sort()).toEqual([...languages].sort());
   });
 
@@ -47,6 +47,19 @@ describe('TRANSLATIONS', () => {
         expect(typeof value).toBe('string');
         expect(String(value).trim()).not.toBe('');
       });
+    });
+  });
+
+  // 감도 라벨은 Dynamic Island compact 영역에도 보이므로 영어 'Jingle'(6자) 수준으로 짧게 둔다 (docs/Spec.md §10.1)
+  it('모든 언어의 감도 라벨은 7자 이하이고 서로 다르다', () => {
+    languages.forEach((language) => {
+      const labels = Object.values(TRANSLATIONS[language].sensitivity.labels);
+
+      labels.forEach((label) => {
+        expect([...label].length).toBeLessThanOrEqual(7);
+      });
+
+      expect(new Set(labels).size).toBe(labels.length);
     });
   });
 
@@ -95,6 +108,69 @@ describe('TRANSLATIONS', () => {
           [Sensitivity.Low]: '静か',
         },
         armedDetail: 'チリン · 振ると鳴ります',
+      },
+      [AppLanguage.ZhHant]: {
+        title: '鈴聲',
+        labels: {
+          [Sensitivity.High]: '叮鈴叮鈴',
+          [Sensitivity.Mid]: '叮鈴',
+          [Sensitivity.Low]: '安靜',
+        },
+        armedDetail: '叮鈴 · 搖一搖就會響',
+      },
+      [AppLanguage.Sk]: {
+        title: 'Zvuk zvončeka',
+        labels: {
+          [Sensitivity.High]: 'Cinkot',
+          [Sensitivity.Mid]: 'Cink',
+          [Sensitivity.Low]: 'Ticho',
+        },
+        armedDetail: 'Cink · Zatras a zazvoní',
+      },
+      [AppLanguage.Pl]: {
+        title: 'Dźwięk dzwonka',
+        labels: {
+          [Sensitivity.High]: 'Głośno',
+          [Sensitivity.Mid]: 'Średnio',
+          [Sensitivity.Low]: 'Cicho',
+        },
+        armedDetail: 'Średnio · Potrząśnij, a zadzwoni',
+      },
+      [AppLanguage.Ro]: {
+        title: 'Sunetul clopoțelului',
+        labels: {
+          [Sensitivity.High]: 'Tare',
+          [Sensitivity.Mid]: 'Mediu',
+          [Sensitivity.Low]: 'Încet',
+        },
+        armedDetail: 'Mediu · Scutură ca să sune',
+      },
+      [AppLanguage.Sl]: {
+        title: 'Zvok zvončka',
+        labels: {
+          [Sensitivity.High]: 'Cin-cin',
+          [Sensitivity.Mid]: 'Cin',
+          [Sensitivity.Low]: 'Tiho',
+        },
+        armedDetail: 'Cin · Stresi, da zazvoni',
+      },
+      [AppLanguage.Hr]: {
+        title: 'Zvuk zvonca',
+        labels: {
+          [Sensitivity.High]: 'Cin-cin',
+          [Sensitivity.Mid]: 'Cin',
+          [Sensitivity.Low]: 'Tiho',
+        },
+        armedDetail: 'Cin · Protresi da zazvoni',
+      },
+      [AppLanguage.It]: {
+        title: 'Suono del campanello',
+        labels: {
+          [Sensitivity.High]: 'Forte',
+          [Sensitivity.Mid]: 'Medio',
+          [Sensitivity.Low]: 'Piano',
+        },
+        armedDetail: 'Medio · Scuoti per farlo suonare',
       },
     };
 

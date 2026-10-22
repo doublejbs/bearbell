@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <string name="bearbell_channel_name">Stanje bearbell</string>
+  <string name="bearbell_running_title">bearbell uključen</string>
+  <string name="bearbell_running_text">Protresi i zvonce će zazvoniti</string>
+  <string name="bearbell_off_title">bearbell isključen</string>
+  <string name="bearbell_off_text">Dodirni „Uključi” za ponovno praćenje pokreta</string>
+  <string name="bearbell_action_turn_off">Isključi</string>
+  <string name="bearbell_action_turn_on">Uključi</string>
+</resources>
